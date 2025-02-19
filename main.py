@@ -32,7 +32,6 @@ port = 1024  # port number
 def main():
 
     today = datetime.date.today()
-    TimeD = time.strftime("%H-%M-%S", time.localtime())
     todaystr = "QAResults"
     timestr = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
     try:
