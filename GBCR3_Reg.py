@@ -5,95 +5,58 @@ import copy
 class GBCR3_Reg(object):
     ## @var _defaultRegMap default register values
     _defaultRegMap = {
-        'CH1_CML_AmplSel'       :   0x7,
-        'CH1_EQ_ATT'            :   0x3,
-        'CH1_Dis_EQ_LF'         :   0,
-        'CH1_CTLE_MFSR'         :   0xb,
-        'CH1_CTLE_HFSR'         :   0xb,
-        'CH1_Dis_LPF'           :   0,
-        'CH1_Dis_DFF'           :   1,
-        'CH1_Disable'           :   0,
-        'CH2_CML_AmplSel'       :   0x7,
-        'CH2_EQ_ATT'            :   0x3,
-        'CH2_Dis_EQ_LF'         :   0,
-        'CH2_CTLE_MFSR'         :   0xb,
-        'CH2_CTLE_HFSR'         :   0xb,
-        'CH2_Dis_LPF'           :   0,
-        'CH2_Dis_DFF'           :   1,
-        'CH2_Disable'           :   0,
-        'CH3_CML_AmplSel'       :   0x7,
-        'CH3_EQ_ATT'            :   0x3,
-        'CH3_Dis_EQ_LF'         :   0,
-        'CH3_CTLE_MFSR'         :   0xb,
-        'CH3_CTLE_HFSR'         :   0xb,
-        'CH3_Dis_LPF'           :   0,
-        'CH3_Dis_DFF'           :   1,
-        'CH3_Disable'           :   0,
-        'CH4_CML_AmplSel'       :   0x7,
-        'CH4_EQ_ATT'            :   0x3,
-        'CH4_Dis_EQ_LF'         :   0,
-        'CH4_CTLE_MFSR'         :   0xb,
-        'CH4_CTLE_HFSR'         :   0xb,
-        'CH4_Dis_LPF'           :   0,
-        'CH4_Dis_DFF'           :   1,
-        'CH4_Disable'           :   0,
-        'CH5_CML_AmplSel'       :   0x7,
-        'CH5_EQ_ATT'            :   0x3,
-        'CH5_Dis_EQ_LF'         :   0,
-        'CH5_CTLE_MFSR'         :   0xb,
-        'CH5_CTLE_HFSR'         :   0xb,
-        'CH5_Dis_LPF'           :   0,
-        'CH5_Dis_DFF'           :   1,
-        'CH5_Disable'           :   0,
-        'CH6_CML_AmplSel'       :   0x7,
-        'CH6_EQ_ATT'            :   0x3,
-        'CH6_Dis_EQ_LF'         :   0,
-        'CH6_CTLE_MFSR'         :   0xb,
-        'CH6_CTLE_HFSR'         :   0xb,
-        'CH6_Dis_LPF'           :   0,
-        'CH6_Dis_DFF'           :   1,
-        'CH6_Disable'           :   0,
-        'CH7_CML_AmplSel'       :   0x7,
-        'CH7_EQ_ATT'            :   0x3,
-        'CH7_Dis_EQ_LF'         :   0,
-        'CH7_CTLE_MFSR'         :   0xb,
-        'CH7_CTLE_HFSR'         :   0xb,
-        'CH7_Dis_LPF'           :   0,
-        'CH7_Dis_DFF'           :   1,
-        'CH7_Disable'           :   0,
+        #Using Evan's Default Value for '_Dis_MUX_BIAS'
+        #Name: RX_CH6 / regOut00-03
+        'Dis_Ch_BIAS_CH6'       :  0,       'Dis_LPF_BIAS_CH6'       :  0,       'CH6_Dis_MUX_BIAS'        :  0x17,
+        'CH6_EQ_HF1'            :  0xb,     'CH6_EQ_HF2'             :  0xb,   
+        'CH6_EQ_HF3'            :  0xb,     'CH6_EQ_MF'              :  0xb,  
+        'Dis_EQ_LF_CH6'         :  0,       'CH6_CML_AmplSel'        :  0x7,     'CH6_CLK_Delay'           :  0x5,
+        
+        #Name: RX_CH5 / regOut04-07
+        'Dis_Ch_BIAS_CH5'       :  0,       'Dis_LPF_BIAS_CH5'       :  0,       'CH5_Dis_MUX_BIAS'        :  0x17,
+        'CH5_EQ_HF1'            :  0xb,     'CH5_EQ_HF2'             :  0xb,   
+        'CH5_EQ_HF3'            :  0xb,     'CH5_EQ_MF'              :  0xb,  
+        'Dis_EQ_LF_CH5'         :  0,       'CH5_CML_AmplSel'        :  0x7,     'CH5_CLK_Delay'           :  0x5,
+        
+        #Name: RX_CH4 / regOut08-0B
+        'Dis_Ch_BIAS_CH4'       :  0,       'Dis_LPF_BIAS_CH4'       :  0,       'CH4_Dis_MUX_BIAS'        :  0x17,
+        'CH4_EQ_HF1'            :  0xb,     'CH4_EQ_HF2'             :  0xb,   
+        'CH4_EQ_HF3'            :  0xb,     'CH4_EQ_MF'              :  0xb,  
+        'Dis_EQ_LF_CH4'         :  0,       'CH4_CML_AmplSel'        :  0x7,     'CH4_CLK_Delay'           :  0x5,
+        
+        #Name: RX_CH3 / regOut0C-0F
+        'Dis_Ch_BIAS_CH3'       :  0,       'Dis_LPF_BIAS_CH3'       :  0,       'CH3_Dis_MUX_BIAS'        :  0x17,
+        'CH3_EQ_HF1'            :  0xb,     'CH3_EQ_HF2'             :  0xb,   
+        'CH3_EQ_HF3'            :  0xb,     'CH3_EQ_MF'              :  0xb,  
+        'Dis_EQ_LF_CH3'         :  0,       'CH3_CML_AmplSel'        :  0x7,     'CH3_CLK_Delay'           :  0x5,
+        
+        #Name: RX_CH2 / regOut10-13
+        'Dis_Ch_BIAS_CH2'       :  0,       'Dis_LPF_BIAS_CH2'       :  0,       'CH2_Dis_MUX_BIAS'        :  0x17,
+        'CH2_EQ_HF1'            :  0xb,     'CH2_EQ_HF2'             :  0xb,   
+        'CH2_EQ_HF3'            :  0xb,     'CH2_EQ_MF'              :  0xb,  
+        'Dis_EQ_LF_CH2'         :  0,       'CH2_CML_AmplSel'        :  0x7,     'CH2_CLK_Delay'           :  0x5,
 
-        'dllCapReset'           :   0,
-        'dllEnable'             :   1,
-        'dllChargePumpCurrent'  :   0xf,
-        'dllForceDown'          :   0,
+        #Name: RX_CH1 / regOut14-17
+        'Dis_Ch_BIAS_CH1'       :  0,       'Dis_LPF_BIAS_CH1'       :  0,       'CH1_Dis_MUX_BIAS'        :  0x17,
+        'CH1_EQ_HF1'            :  0xb,     'CH1_EQ_HF2'             :  0xb,   
+        'CH1_EQ_HF3'            :  0xb,     'CH1_EQ_MF'              :  0xb,  
+        'Dis_EQ_LF_CH1'         :  0,       'CH1_CML_AmplSel'        :  0x7,     'CH1_CLK_Delay'           :  0x5,
+        
+        #Using Evan's Default Values
+        #Name: TX_CH1 / regOut18-1A
+        'Tx_Ch1_SC2'            :  0xf,     'Tx_Ch1_SC1'             :  0xf,
+        'Tx_Ch1_AmplSel'        :  0xe,     'Tx_Ch1_SR1'             :  0x4,
+        'Tx_Ch1_SR2'            :  0xb,     'Dis_Ch1_PreEmph'        :  0,       'Dis_Ch1_TxBIAS'          :  0,   
 
-        'dllClockDelay_CH7'     :   0x5,
-        'dllClockDelay_CH6'     :   0x5,
-        'dllClockDelay_CH5'     :   0x5,
-        'dllClockDelay_CH4'     :   0x5,
-        'dllClockDelay_CH3'     :   0x5,
-        'dllClockDelay_CH2'     :   0x5,
-        'dllClockDelay_CH1'     :   0x5,
-        'dllClockDelay_CH0'     :   0x5,
+        #Name: TX_CH2 / regOut1B-1D
+        'Tx_Ch2_SC2'            :  0xf,     'Tx_Ch2_SC1'             :  0xf,
+        'Tx_Ch2_AmplSel'        :  0x7,     'Tx_Ch2_SR1'             :  0x4,
+        'Tx_Ch2_SR2'            :  0x10,    'Dis_Ch2_PreEmph'        :  0,       'Dis_Ch2_TxBIAS'          :  0,   
 
-        'Dis_Tx'                :   0,
-        'Rx_Equa'               :   0x0,
-        'Rx_invData'            :   0,
-        'Rx_enTermination'      :   1,
-        'Rx_setCM'              :   1,
-        'Rx_Enable'             :   1,
-
-        'Tx1_DL_SR'             :   0x5,
-        'Tx1_Dis_DL_Emp'        :   0,
-        'Tx1_DL_ATT'            :   0x0,
-        'Tx1_Dis_DL_LPF_BIAS'   :   0,
-        'Tx1_Dis_DL_BIAS'       :   1,
-
-        'Tx2_DL_SR'             :   0x5,
-        'Tx2_Dis_DL_Emp'        :   0,
-        'Tx2_DL_ATT'            :   0x0,
-        'Tx2_Dis_DL_LPF_BIAS'   :   0,
-        'Tx2_Dis_DL_BIAS'       :   1,
+        #Name: Phaseshift / regOut1E-1F
+        #The next line should be checked later!!!
+        'CLK_Rx_en'             :  1,     'CLK_Tx_Delay'             :  0xc,     'Dis_CLK_Tx'              :  1,   
+        'Dll_CPCurrent'         :  0x2,   'Dll_ForceDown'            :  1,       'Dll_Enable'              :  1,    'Dll_CapReset'              :  1,   
     }
 
     _regMap = {}
