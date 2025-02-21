@@ -65,101 +65,107 @@ class GBCR3_Reg(object):
         self._regMap = copy.deepcopy(self._defaultRegMap)
 
     # ----------------------- Set methods -----------------------
-    def set_CH1_CML_AmplSel(self, val):        self._regMap['CH1_CML_AmplSel'] = val & 0x7
-    def set_CH1_EQ_ATT(self, val):            self._regMap['CH1_EQ_ATT'] = val & 0x3
-    def set_CH1_Dis_EQ_LF(self, val):         self._regMap['CH1_Dis_EQ_LF'] = val & 0x1
-    def set_CH1_CTLE_MFSR(self, val):         self._regMap['CH1_CTLE_MFSR'] = val & 0xf
-    def set_CH1_CTLE_HFSR(self, val):         self._regMap['CH1_CTLE_HFSR'] = val & 0xf
-    def set_CH1_Dis_LPF(self, val):           self._regMap['CH1_Dis_LPF'] = val & 0x1
-    def set_CH1_Dis_DFF(self, val):           self._regMap['CH1_Dis_DFF'] = val & 0x1
-    def set_CH1_Disable(self, val):           self._regMap['CH1_Disable'] = val & 0x1
 
-    def set_CH2_CML_AmplSel(self, val):        self._regMap['CH2_CML_AmplSel'] = val & 0x7
-    def set_CH2_EQ_ATT(self, val):            self._regMap['CH2_EQ_ATT'] = val & 0x3
-    def set_CH2_Dis_EQ_LF(self, val):         self._regMap['CH2_Dis_EQ_LF'] = val & 0x1
-    def set_CH2_CTLE_MFSR(self, val):         self._regMap['CH2_CTLE_MFSR'] = val & 0xf
-    def set_CH2_CTLE_HFSR(self, val):         self._regMap['CH2_CTLE_HFSR'] = val & 0xf
-    def set_CH2_Dis_LPF(self, val):           self._regMap['CH2_Dis_LPF'] = val & 0x1
-    def set_CH2_Dis_DFF(self, val):           self._regMap['CH2_Dis_DFF'] = val & 0x1
-    def set_CH2_Disable(self, val):           self._regMap['CH2_Disable'] = val & 0x1
+    #Name: RX_CH6 / regOut00-03
+    def set_Dis_Ch_BIAS_CH6(self, val):           self._regMap['Dis_Ch_BIAS_CH6'] = val & 0x1
+    def set_Dis_LPF_BIAS_CH6(self, val):          self._regMap['Dis_LPF_BIAS_CH6'] = val & 0x1
+    def set_CH6_Dis_MUX_BIAS(self, val):          self._regMap['CH6_Dis_MUX_BIAS'] = val & 0x1f
+    def set_CH6_EQ_HF1(self, val):                self._regMap['CH6_EQ_HF1'] = val & 0xf
+    def set_CH6_EQ_HF2(self, val):                self._regMap['CH6_EQ_HF2'] = val & 0xf
+    def set_CH6_EQ_HF3(self, val):                self._regMap['CH6_EQ_HF3'] = val & 0xf
+    def set_CH6_EQ_MF(self, val):                 self._regMap['CH6_EQ_MF'] = val & 0xf
+    def set_Dis_EQ_LF_CH6(self, val):             self._regMap['Dis_EQ_LF_CH6'] = val & 0x1
+    def set_CH6_CML_AmplSel(self, val):           self._regMap['CH6_CML_AmplSel'] = val & 0x7
+    def set_CH6_CLK_Delay(self, val):             self._regMap['CH6_CLK_Delay'] = val & 0xf
 
-    def set_CH3_CML_AmplSel(self, val):        self._regMap['CH3_CML_AmplSel'] = val & 0x7
-    def set_CH3_EQ_ATT(self, val):            self._regMap['CH3_EQ_ATT'] = val & 0x3
-    def set_CH3_Dis_EQ_LF(self, val):         self._regMap['CH3_Dis_EQ_LF'] = val & 0x1
-    def set_CH3_CTLE_MFSR(self, val):         self._regMap['CH3_CTLE_MFSR'] = val & 0xf
-    def set_CH3_CTLE_HFSR(self, val):         self._regMap['CH3_CTLE_HFSR'] = val & 0xf
-    def set_CH3_Dis_LPF(self, val):           self._regMap['CH3_Dis_LPF'] = val & 0x1
-    def set_CH3_Dis_DFF(self, val):           self._regMap['CH3_Dis_DFF'] = val & 0x1
-    def set_CH3_Disable(self, val):           self._regMap['CH3_Disable'] = val & 0x1
+    #Name: RX_CH5 / regOut04-07
+    def set_Dis_Ch_BIAS_CH5(self, val):           self._regMap['Dis_Ch_BIAS_CH5'] = val & 0x1
+    def set_Dis_LPF_BIAS_CH5(self, val):          self._regMap['Dis_LPF_BIAS_CH5'] = val & 0x1
+    def set_CH5_Dis_MUX_BIAS(self, val):          self._regMap['CH5_Dis_MUX_BIAS'] = val & 0x1f
+    def set_CH5_EQ_HF1(self, val):                self._regMap['CH5_EQ_HF1'] = val & 0xf
+    def set_CH5_EQ_HF2(self, val):                self._regMap['CH5_EQ_HF2'] = val & 0xf
+    def set_CH5_EQ_HF3(self, val):                self._regMap['CH5_EQ_HF3'] = val & 0xf
+    def set_CH5_EQ_MF(self, val):                 self._regMap['CH5_EQ_MF'] = val & 0xf
+    def set_Dis_EQ_LF_CH5(self, val):             self._regMap['Dis_EQ_LF_CH5'] = val & 0x1
+    def set_CH5_CML_AmplSel(self, val):           self._regMap['CH5_CML_AmplSel'] = val & 0x7
+    def set_CH5_CLK_Delay(self, val):             self._regMap['CH5_CLK_Delay'] = val & 0xf
 
-    def set_CH4_CML_AmplSel(self, val):        self._regMap['CH4_CML_AmplSel'] = val & 0x7
-    def set_CH4_EQ_ATT(self, val):            self._regMap['CH4_EQ_ATT'] = val & 0x3
-    def set_CH4_Dis_EQ_LF(self, val):         self._regMap['CH4_Dis_EQ_LF'] = val & 0x1
-    def set_CH4_CTLE_MFSR(self, val):         self._regMap['CH4_CTLE_MFSR'] = val & 0xf
-    def set_CH4_CTLE_HFSR(self, val):         self._regMap['CH4_CTLE_HFSR'] = val & 0xf
-    def set_CH4_Dis_LPF(self, val):           self._regMap['CH4_Dis_LPF'] = val & 0x1
-    def set_CH4_Dis_DFF(self, val):           self._regMap['CH4_Dis_DFF'] = val & 0x1
-    def set_CH4_Disable(self, val):           self._regMap['CH4_Disable'] = val & 0x1
+    #Name: RX_CH4 / regOut08-0B
+    def set_Dis_Ch_BIAS_CH4(self, val):           self._regMap['Dis_Ch_BIAS_CH4'] = val & 0x1
+    def set_Dis_LPF_BIAS_CH4(self, val):          self._regMap['Dis_LPF_BIAS_CH4'] = val & 0x1
+    def set_CH4_Dis_MUX_BIAS(self, val):          self._regMap['CH4_Dis_MUX_BIAS'] = val & 0x1f
+    def set_CH4_EQ_HF1(self, val):                self._regMap['CH4_EQ_HF1'] = val & 0xf
+    def set_CH4_EQ_HF2(self, val):                self._regMap['CH4_EQ_HF2'] = val & 0xf
+    def set_CH4_EQ_HF3(self, val):                self._regMap['CH4_EQ_HF3'] = val & 0xf
+    def set_CH4_EQ_MF(self, val):                 self._regMap['CH4_EQ_MF'] = val & 0xf
+    def set_Dis_EQ_LF_CH4(self, val):             self._regMap['Dis_EQ_LF_CH4'] = val & 0x1
+    def set_CH4_CML_AmplSel(self, val):           self._regMap['CH4_CML_AmplSel'] = val & 0x7
+    def set_CH4_CLK_Delay(self, val):             self._regMap['CH4_CLK_Delay'] = val & 0xf
+    
+    #Name: RX_CH3 / regOut0C-0F
+    def set_Dis_Ch_BIAS_CH3(self, val):           self._regMap['Dis_Ch_BIAS_CH3'] = val & 0x1
+    def set_Dis_LPF_BIAS_CH3(self, val):          self._regMap['Dis_LPF_BIAS_CH3'] = val & 0x1
+    def set_CH3_Dis_MUX_BIAS(self, val):          self._regMap['CH3_Dis_MUX_BIAS'] = val & 0x1f
+    def set_CH3_EQ_HF1(self, val):                self._regMap['CH3_EQ_HF1'] = val & 0xf
+    def set_CH3_EQ_HF2(self, val):                self._regMap['CH3_EQ_HF2'] = val & 0xf
+    def set_CH3_EQ_HF3(self, val):                self._regMap['CH3_EQ_HF3'] = val & 0xf
+    def set_CH3_EQ_MF(self, val):                 self._regMap['CH3_EQ_MF'] = val & 0xf
+    def set_Dis_EQ_LF_CH3(self, val):             self._regMap['Dis_EQ_LF_CH3'] = val & 0x1
+    def set_CH3_CML_AmplSel(self, val):           self._regMap['CH3_CML_AmplSel'] = val & 0x7
+    def set_CH3_CLK_Delay(self, val):             self._regMap['CH3_CLK_Delay'] = val & 0xf
+        
+    #Name: RX_CH2 / regOut10-13
+    def set_Dis_Ch_BIAS_CH2(self, val):           self._regMap['Dis_Ch_BIAS_CH2'] = val & 0x1
+    def set_Dis_LPF_BIAS_CH2(self, val):          self._regMap['Dis_LPF_BIAS_CH2'] = val & 0x1
+    def set_CH2_Dis_MUX_BIAS(self, val):          self._regMap['CH2_Dis_MUX_BIAS'] = val & 0x1f
+    def set_CH2_EQ_HF1(self, val):                self._regMap['CH2_EQ_HF1'] = val & 0xf
+    def set_CH2_EQ_HF2(self, val):                self._regMap['CH2_EQ_HF2'] = val & 0xf
+    def set_CH2_EQ_HF3(self, val):                self._regMap['CH2_EQ_HF3'] = val & 0xf
+    def set_CH2_EQ_MF(self, val):                 self._regMap['CH2_EQ_MF'] = val & 0xf
+    def set_Dis_EQ_LF_CH2(self, val):             self._regMap['Dis_EQ_LF_CH2'] = val & 0x1
+    def set_CH2_CML_AmplSel(self, val):           self._regMap['CH2_CML_AmplSel'] = val & 0x7
+    def set_CH2_CLK_Delay(self, val):             self._regMap['CH2_CLK_Delay'] = val & 0xf
+        
+    #Name: RX_CH1 / regOut14-17
+    def set_Dis_Ch_BIAS_CH1(self, val):           self._regMap['Dis_Ch_BIAS_CH1'] = val & 0x1
+    def set_Dis_LPF_BIAS_CH1(self, val):          self._regMap['Dis_LPF_BIAS_CH1'] = val & 0x1
+    def set_CH1_Dis_MUX_BIAS(self, val):          self._regMap['CH1_Dis_MUX_BIAS'] = val & 0x1f
+    def set_CH1_EQ_HF1(self, val):                self._regMap['CH1_EQ_HF1'] = val & 0xf
+    def set_CH1_EQ_HF2(self, val):                self._regMap['CH1_EQ_HF2'] = val & 0xf
+    def set_CH1_EQ_HF3(self, val):                self._regMap['CH1_EQ_HF3'] = val & 0xf
+    def set_CH1_EQ_MF(self, val):                 self._regMap['CH1_EQ_MF'] = val & 0xf
+    def set_Dis_EQ_LF_CH1(self, val):             self._regMap['Dis_EQ_LF_CH1'] = val & 0x1
+    def set_CH1_CML_AmplSel(self, val):           self._regMap['CH1_CML_AmplSel'] = val & 0x7
+    def set_CH1_CLK_Delay(self, val):             self._regMap['CH1_CLK_Delay'] = val & 0xf
 
-    def set_CH5_CML_AmplSel(self, val):        self._regMap['CH5_CML_AmplSel'] = val & 0x7
-    def set_CH5_EQ_ATT(self, val):            self._regMap['CH5_EQ_ATT'] = val & 0x3
-    def set_CH5_Dis_EQ_LF(self, val):         self._regMap['CH5_Dis_EQ_LF'] = val & 0x1
-    def set_CH5_CTLE_MFSR(self, val):         self._regMap['CH5_CTLE_MFSR'] = val & 0xf
-    def set_CH5_CTLE_HFSR(self, val):         self._regMap['CH5_CTLE_HFSR'] = val & 0xf
-    def set_CH5_Dis_LPF(self, val):           self._regMap['CH5_Dis_LPF'] = val & 0x1
-    def set_CH5_Dis_DFF(self, val):           self._regMap['CH5_Dis_DFF'] = val & 0x1
-    def set_CH5_Disable(self, val):           self._regMap['CH5_Disable'] = val & 0x1
+    #Name: TX_CH1 / regOut18-1A 
+    def set_Tx_Ch1_SC2(self, val):                self._regMap['Tx_Ch1_SC2'] = val & 0xf
+    def set_Tx_Ch1_SC1(self, val):                self._regMap['Tx_Ch1_SC1'] = val & 0xf
+    def set_Tx_Ch1_AmplSel(self, val):            self._regMap['Tx_Ch1_AmplSel'] = val & 0x7
+    def set_Tx_Ch1_SR1(self, val):                self._regMap['Tx_Ch1_SR1'] = val & 0x1f
+    def set_Tx_Ch1_SR2(self, val):                self._regMap['Tx_Ch1_SR2'] = val & 0x1f
+    def set_Dis_Ch1_PreEmph(self, val):           self._regMap['Dis_Ch1_PreEmph'] = val & 0x1
+    def set_Dis_Ch1_TxBIAS(self, val):            self._regMap['Dis_Ch1_TxBIAS'] = val & 0x1
 
-    def set_CH6_CML_AmplSel(self, val):        self._regMap['CH6_CML_AmplSel'] = val & 0x7
-    def set_CH6_EQ_ATT(self, val):            self._regMap['CH6_EQ_ATT'] = val & 0x3
-    def set_CH6_Dis_EQ_LF(self, val):         self._regMap['CH6_Dis_EQ_LF'] = val & 0x1
-    def set_CH6_CTLE_MFSR(self, val):         self._regMap['CH6_CTLE_MFSR'] = val & 0xf
-    def set_CH6_CTLE_HFSR(self, val):         self._regMap['CH6_CTLE_HFSR'] = val & 0xf
-    def set_CH6_Dis_LPF(self, val):           self._regMap['CH6_Dis_LPF'] = val & 0x1
-    def set_CH6_Dis_DFF(self, val):           self._regMap['CH6_Dis_DFF'] = val & 0x1
-    def set_CH6_Disable(self, val):           self._regMap['CH6_Disable'] = val & 0x1
+    #Name: TX_CH2 / regOut1B-1D
+    def set_Tx_Ch2_SC2(self, val):                self._regMap['Tx_Ch2_SC2'] = val & 0xf
+    def set_Tx_Ch2_SC1(self, val):                self._regMap['Tx_Ch2_SC1'] = val & 0xf
+    def set_Tx_Ch2_AmplSel(self, val):            self._regMap['Tx_Ch2_AmplSel'] = val & 0x7
+    def set_Tx_Ch2_SR1(self, val):                self._regMap['Tx_Ch2_SR1'] = val & 0x1f
+    def set_Tx_Ch2_SR2(self, val):                self._regMap['Tx_Ch2_SR2'] = val & 0x1f
+    def set_Dis_Ch2_PreEmph(self, val):           self._regMap['Dis_Ch2_PreEmph'] = val & 0x1
+    def set_Dis_Ch2_TxBIAS(self, val):            self._regMap['Dis_Ch2_TxBIAS'] = val & 0x1
 
-    def set_CH7_CML_AmplSel(self, val):        self._regMap['CH7_CML_AmplSel'] = val & 0x7
-    def set_CH7_EQ_ATT(self, val):            self._regMap['CH7_EQ_ATT'] = val & 0x3
-    def set_CH7_Dis_EQ_LF(self, val):         self._regMap['CH7_Dis_EQ_LF'] = val & 0x1
-    def set_CH7_CTLE_MFSR(self, val):         self._regMap['CH7_CTLE_MFSR'] = val & 0xf
-    def set_CH7_CTLE_HFSR(self, val):         self._regMap['CH7_CTLE_HFSR'] = val & 0xf
-    def set_CH7_Dis_LPF(self, val):           self._regMap['CH7_Dis_LPF'] = val & 0x1
-    def set_CH7_Dis_DFF(self, val):           self._regMap['CH7_Dis_DFF'] = val & 0x1
-    def set_CH7_Disable(self, val):           self._regMap['CH7_Disable'] = val & 0x1
-
-    def set_dllCapReset(self, val):           self._regMap['dllCapReset'] = val & 0x1
-    def set_dllEnable(self, val):             self._regMap['dllEnable'] = val & 0x1
-    def set_dllChargePumpCurrent(self, val):  self._regMap['dllChargePumpCurrent'] = val & 0xf
-    def set_dllForceDown(self, val):          self._regMap['dllForceDown'] = val & 0x1
-
-    def set_dllClockDelay_CH7(self, val):     self._regMap['dllClockDelay_CH7'] = val & 0xf
-    def set_dllClockDelay_CH6(self, val):     self._regMap['dllClockDelay_CH6'] = val & 0xf
-    def set_dllClockDelay_CH5(self, val):     self._regMap['dllClockDelay_CH5'] = val & 0xf
-    def set_dllClockDelay_CH4(self, val):     self._regMap['dllClockDelay_CH4'] = val & 0xf
-    def set_dllClockDelay_CH3(self, val):     self._regMap['dllClockDelay_CH3'] = val & 0xf
-    def set_dllClockDelay_CH2(self, val):     self._regMap['dllClockDelay_CH2'] = val & 0xf
-    def set_dllClockDelay_CH1(self, val):     self._regMap['dllClockDelay_CH1'] = val & 0xf
-    def set_dllClockDelay_CH0(self, val):     self._regMap['dllClockDelay_CH0'] = val & 0xf
-
-    def set_Dis_Tx(self, val):                self._regMap['Dis_Tx'] = val & 0x1
-    def set_Rx_Equa(self, val):               self._regMap['Rx_Equa'] = val & 0x3
-    def set_Rx_invData(self, val):            self._regMap['Rx_invData'] = val & 0x1
-    def set_Rx_enTermination(self, val):      self._regMap['Rx_enTermination'] = val & 0x1
-    def set_Rx_setCM(self, val):              self._regMap['Rx_setCM'] = val & 0x1
-    def set_Rx_Enable(self, val):             self._regMap['Rx_Enable'] = val & 0x1
-
-    def set_Tx1_DL_SR(self, val):             self._regMap['Tx1_DL_SR'] = val & 0x7
-    def set_Tx1_Dis_DL_Emp(self, val):        self._regMap['Tx1_Dis_DL_Emp'] = val & 0x1
-    def set_Tx1_DL_ATT(self, val):            self._regMap['Tx1_DL_ATT'] = val & 0x3
-    def set_Tx1_Dis_DL_LPF_BIAS(self, val):   self._regMap['Tx1_Dis_DL_LPF_BIAS'] = val & 0x1
-    def set_Tx1_Dis_DL_BIAS(self, val):       self._regMap['Tx1_Dis_DL_BIAS'] = val & 0x1
-
-    def set_Tx2_DL_SR(self, val):             self._regMap['Tx2_DL_SR'] = val & 0x7
-    def set_Tx2_Dis_DL_Emp(self, val):        self._regMap['Tx2_Dis_DL_Emp'] = val & 0x1
-    def set_Tx2_DL_ATT(self, val):            self._regMap['Tx2_DL_ATT'] = val & 0x3
-    def set_Tx2_Dis_DL_LPF_BIAS(self, val):   self._regMap['Tx2_Dis_DL_LPF_BIAS'] = val & 0x1
-    def set_Tx2_Dis_DL_BIAS(self, val):       self._regMap['Tx2_Dis_DL_BIAS'] = val & 0x1
+    #Name: Phaseshift / regOut1E-1F
+    #The next line should be checked later!!!
+    def set_CLK_Rx_en(self, val):                 self._regMap['CLK_Rx_en'] = val & 0x1
+    def set_CLK_Tx_Delay(self, val):              self._regMap['CLK_Tx_Delay'] = val & 0xf
+    def set_Dis_CLK_Tx(self, val):                self._regMap['Dis_CLK_Tx'] = val & 0x1
+    def set_Dll_CPCurrent(self, val):             self._regMap['Dll_CPCurrent'] = val & 0xf
+    def set_Dll_ForceDown(self, val):             self._regMap['Dll_ForceDown'] = val & 0x1
+    def set_Dll_Enable(self, val):                self._regMap['Dll_Enable'] = val & 0x1
+    def set_Dll_CapReset(self, val):              self._regMap['Dll_CapReset'] = val & 0x1
+        
 
     ## get I2C register value
     def get_config_vector(self):
