@@ -29,7 +29,6 @@ port = 1024  # port number
 # 
 # ------------------------------------------------------------------#
 def main():
-
     today = datetime.date.today()
     todaystr = "QAResults"
     timestr = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
@@ -49,7 +48,6 @@ def main():
     store_dict = userdefine_dir
 
     Receive_data(store_dict, num_file)
-
     print(" line 56, All jobs are done!")
 
 def print_bytes_hex(data):
