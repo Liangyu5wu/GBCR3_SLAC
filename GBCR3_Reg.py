@@ -204,21 +204,25 @@ class GBCR3_Reg(object):
         return reg_value
     
 
-    def configure_rx_channels(self, iic_write_val):
-        dis_chan = 0
-        disLPF = 0
-        MUX_bias = 0x17
-        CTLE_MFSR = 0x8
-        CTLE_HFSR = 0x8
-        dis_EQ_LF = 0
-        CML_AmplSel = 0x7
-        dllClkDelay = 0x5
-
+    def configure_rx_channels(self, iic_write_val, ch=None, **kwargs):
+        rx_channels = [6, 5, 4, 3, 2, 1]
+        if ch is not None and ch not in rx_channels:
+            raise ValueError("Invalid channel number. Valid channels are: {}".format(rx_channels))
         for i in range(6):
-            iic_write_val[4 * i] = (dis_chan << 6) | (disLPF << 5) | MUX_bias
-            iic_write_val[4 * i + 1] = (CTLE_HFSR << 4) | CTLE_HFSR
-            iic_write_val[4 * i + 2] = (CTLE_HFSR << 4) | CTLE_MFSR
-            iic_write_val[4 * i + 3] = (dis_EQ_LF << 7) | (CML_AmplSel << 4) | dllClkDelay
+            if ch is None or ch == rx_channels[i]:
+                dis_chan = kwargs.get('dis_chan', self._regMap[f'Dis_Ch_BIAS_CH{rx_channels[i]}'])
+                disLPF = kwargs.get('disLPF', self._regMap[f'Dis_LPF_BIAS_CH{rx_channels[i]}'])
+                MUX_bias = kwargs.get('MUX_bias', self._regMap[f'CH{rx_channels[i]}_Dis_MUX_BIAS'])
+                CTLE_HFSR = kwargs.get('CTLE_HFSR', self._regMap[f'CH{rx_channels[i]}_EQ_HF1'])
+                CTLE_MFSR = kwargs.get('CTLE_MFSR', self._regMap[f'CH{rx_channels[i]}_EQ_MF'])
+                dis_EQ_LF = kwargs.get('dis_EQ_LF', self._regMap[f'Dis_EQ_LF_CH{rx_channels[i]}'])
+                CML_AmplSel = kwargs.get('CML_AmplSel', self._regMap[f'CH{rx_channels[i]}_CML_AmplSel'])
+                dllClkDelay = kwargs.get('dllClkDelay', self._regMap[f'CH{rx_channels[i]}_CLK_Delay'])
+
+                iic_write_val[4 * i] = (dis_chan << 6) | (disLPF << 5) | MUX_bias
+                iic_write_val[4 * i + 1] = (CTLE_HFSR << 4) | CTLE_HFSR
+                iic_write_val[4 * i + 2] = (CTLE_HFSR << 4) | CTLE_MFSR
+                iic_write_val[4 * i + 3] = (dis_EQ_LF << 7) | (CML_AmplSel << 4) | dllClkDelay
         return iic_write_val
 
     def configure_tx(self, iic_write_val):
