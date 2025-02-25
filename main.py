@@ -12,7 +12,6 @@ import numpy as np
 import pyvisa as visa
 from queue import Queue
 from queue import Empty
-from command_interpret import *
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
@@ -20,10 +19,10 @@ import pandas as pd
 from collections import defaultdict
 
 from GBCR3_Reg import *
-
+from command_interpret import *
 from crc32_8 import crc32_8
 
-hostname = '192.168.2.6'  # Fixed FPGA IP address
+hostname = '192.168.2.6'  # Fixed FPGA IP address at SLAC
 port = 1024  # port number
 
 # ---------------------------
