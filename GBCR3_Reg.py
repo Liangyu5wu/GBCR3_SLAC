@@ -45,8 +45,8 @@ class GBCR3_Reg(object):
         #Using Evan's Default Values
         #Name: TX_CH1 / regOut18-1A
         'Tx_Ch1_SC2'            :  0xf,     'Tx_Ch1_SC1'             :  0xf,
-        'Tx_Ch1_AmplSel'        :  0xe,     'Tx_Ch1_SR1'             :  0x4,
-        'Tx_Ch1_SR2'            :  0xb,     'Dis_Ch1_PreEmph'        :  0,       'Dis_Ch1_TxBIAS'          :  0,   
+        'Tx_Ch1_AmplSel'        :  0x7,     'Tx_Ch1_SR1'             :  0x4,
+        'Tx_Ch1_SR2'            :  0x10,    'Dis_Ch1_PreEmph'        :  0,       'Dis_Ch1_TxBIAS'          :  0,   
 
         #Name: TX_CH2 / regOut1B-1D
         'Tx_Ch2_SC2'            :  0xf,     'Tx_Ch2_SC1'             :  0xf,
