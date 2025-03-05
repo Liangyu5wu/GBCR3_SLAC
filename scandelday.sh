@@ -15,15 +15,17 @@ for ((i=$start_dec; i<=$end_dec; i++))
 do
     hex_val=$(printf "0x%x" $i)
 
-    sed -i "203s/.*/iic_write_val = GBCR3_Reg1.configure_rx_channels(iic_write_val, ch=4, MUX_bias=0xf, fdllClkDelay=$hex_val)/" $main_script
+    sed -i "203s/.*/    iic_write_val = GBCR3_Reg1.configure_rx_channels(iic_write_val, ch=4, MUX_bias=0xf, dllClkDelay=$hex_val)/" $main_script
+    echo "Finished modifying the main script!"
 
     for run in {1..10}
     do
-        temp_output=$(python $main_script 2>&1)
+        echo "Running dllClkDelay=$hex_val, Run=$run ..."
+        temp_output=$(python $main_script 100 2>&1)
 
         summary=$(echo "$temp_output" | awk '/End Run Summary/,0')
 
-        echo "Running RX4 in retimed mode with delay : $hex_val, Run: $run / 10" >> $output_file
+        echo "Running RX Channel 4 in retimed mode with delay : $hex_val, Run: $run / 10" >> $output_file
         echo "$summary" >> $output_file
         echo "----------------------------------------" >> $output_file
     done
