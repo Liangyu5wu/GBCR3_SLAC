@@ -15,7 +15,10 @@ for ((i=$start_dec; i<=$end_dec; i++))
 do
     hex_val=$(printf "0x%x" $i)
 
+    # Scan the retimed mode
     sed -i "203s/.*/    iic_write_val = GBCR3_Reg1.configure_rx_channels(iic_write_val, ch=4, MUX_bias=0xf, dllClkDelay=$hex_val)/" $main_script
+    # Scan the voted mode
+    #sed -i "203s/.*/    iic_write_val = GBCR3_Reg1.configure_rx_channels(iic_write_val, ch=4, MUX_bias=0x17, dllClkDelay=$hex_val)/" $main_script
     echo "Finished modifying the main script!"
 
     for run in {1..10}
