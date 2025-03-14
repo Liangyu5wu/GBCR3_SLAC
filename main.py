@@ -48,7 +48,7 @@ def main():
     store_dict = userdefine_dir
 
     Receive_data(store_dict, num_file)
-    print(" line 56, All jobs are done!")
+    print(" line 51, All jobs are done!")
 
 def print_bytes_hex(data):
     lin = ['0x%02X' % i for i in data]
