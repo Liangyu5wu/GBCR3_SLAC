@@ -192,7 +192,6 @@ def Receive_data(store_dict, num_file):
     print("start GBCR3 reg config")
     
     iic_write_val = [0 for i in range(32)] 
-
     print("declared iic_write_val")
     
     #If you would like to use the Default values:
