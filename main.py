@@ -210,7 +210,7 @@ def Receive_data(store_dict, num_file):
         iic_write(1, Slave_Addr, 0, i, iic_write_val[i])
     print("Written values:", iic_write_val)
 
-    ## read back  data from I2C register one by one
+    ## read back data from I2C register one by one
     iic_read_val = []
     for i in range(len(iic_write_val)):
         iic_read_val += [iic_read(0, Slave_Addr, 1, i)]
@@ -224,7 +224,7 @@ def Receive_data(store_dict, num_file):
     for files in range(num_file):
 
         if files % 10 == 0:
-            # # read back  data from I2C register one by one
+            # # read back data from I2C register one by one
             with open("./%s/I2C.TXT" % store_dict, 'a') as infile_iic:
                 lasttime = datetime.datetime.now()
                 iic_read_val = []
