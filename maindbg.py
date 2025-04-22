@@ -45,7 +45,7 @@ def main():
     except FileExistsError:
         print("User define directories already created!!!")
     num_file = int(sys.argv[1])  # total files will be read back
-    dbg_mode_bool = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+    dbg_mode_bool = int(sys.argv[2]) if len(sys.argv) > 2 else 0  # 1 - debug mode; 0/no parameter - normal mode
     store_dict = userdefine_dir
 
     Receive_data(store_dict, num_file)
