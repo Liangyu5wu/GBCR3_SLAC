@@ -320,12 +320,15 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         # tentative evaluation Error flag and channel ID  
         StatErr  = val[0]>>31&1 
         StatChan = val[0]>>27&0xF  
+
+        aligned_error_counter = 0
         if aligned == 1:
             error_flag = (
                                  Rawdata & 0x8000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000) >> (127 + 128)  # error flag
 
             # if aligned, display on the screen and save to files
             if error_flag == 1:
+                aligned_error_counter += 1
                 channel_id = (
                                      Rawdata & 0x7800_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000) >> (
                                      123 + 128)  # channel Id
@@ -357,7 +360,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                     cal_crc32 = cal_crc32_t
 
                 Time = datetime.datetime.now()
-                print('%s %d %d %d %d %d %08x %08x %08x %d' % (
+                if dbg == 1 and aligned_error_counter < 10: print('%s %d %d %d %d %d %08x %08x %08x %d' % (
                     Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
                     expected_code, received_code, error_position, crc32))
                 with open("./%s/ChAll.TXT" % store_dict, 'a') as infile:  # # 'a': add, will not cover previous infor
@@ -388,7 +391,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                 ChStat[StatVal][StatChan] = ChStat[StatVal][StatChan] + 1   
             # end if error_flag
         else:  # aligned != 1
-            if i<200 and dbg==1 :
+            if i<200 and dbg == 1:
                 print("Not aligned chan=%i  Rawdata=%x" % (StatChan,Rawdata))
             while aligned == 0:
                 if i > 50000:
@@ -418,10 +421,10 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                             ErrNA  = val[0]>>31&1 
                             ChanNA = val[0]>>27&0xF
                             if ChanNA>9:
-                                print("Not aligned i=%i bad chan=%i  Rawdata=%x" % (i,ChanNA,Rawdata))
+                                if dbg == 1: print("Not aligned i=%i bad chan=%i  Rawdata=%x" % (i,ChanNA,Rawdata))
                                 ChanNA = 9
                             else:
-                                print("Not aligned i=%i chan=%i  Rawdata=%x" % (i,ChanNA,Rawdata))
+                                if dbg == 1: print("Not aligned i=%i chan=%i  Rawdata=%x" % (i,ChanNA,Rawdata))
                             #end if
                             ChStat[ErrNA][ChanNA] = ChStat[ErrNA][ChanNA] + 1 
                         #end if remainer = 1 
