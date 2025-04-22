@@ -240,10 +240,10 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
                 for iic_read_index in range(len(iic_write_val)):
                     iic_read_val += [iic_read(0, Slave_Addr, 1, iic_read_index)]
                 if iic_read_val == iic_write_val:
-                    print("%s W == R: %s" % (lasttime, iic_read_val))
+                    if dbg_mode == 1: print("%s W == R: %s" % (lasttime, iic_read_val))
                     infile_iic.write("%s Written ==  Read: %s\n" % (lasttime, iic_read_val))
                 else:
-                    print("%s W!= R: %s" % (lasttime, iic_read_val))
+                    if dbg_mode == 1: print("%s W!= R: %s" % (lasttime, iic_read_val))
                     infile_iic.write("%s Written !=  Read: %s\n" % (lasttime, iic_read_val))
                 # end if
                 infile_iic.flush()
