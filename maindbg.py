@@ -291,10 +291,10 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     # Ch=9 is filler without channel ID 
     #
     ChStat = [
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0]
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0]
     ]
     # for i in range(6250)
     while i < 50001:
@@ -360,7 +360,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                     cal_crc32 = cal_crc32_t
 
                 Time = datetime.datetime.now()
-                if dbg == 1 and aligned_error_counter < 10: print('%s %d %d %d %d %d %08x %08x %08x %d' % (
+                if dbg == 1 and aligned_error_counter < 20: print('%s %d %d %d %d %d %08x %08x %08x %d' % (
                     Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
                     expected_code, received_code, error_position, crc32))
                 with open("./%s/ChAll.TXT" % store_dict, 'a') as infile:  # # 'a': add, will not cover previous infor
@@ -377,18 +377,35 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                 if channel_id < 10:
                     ChStat[3][channel_id] = ChStat[3][channel_id] + 1
                 else:
-                    print("Bad channel_id %i" % channel_id)
+                    if dbg == 1: print("Bad channel_id %i" % channel_id)
+                    ChStat[3][10] = ChStat[3][10] + 1
                 #end if
             else:  # error_flag != 1
-                count = count + 1
                 if count % 1000000 == 0:
-                    print("received data is filler: %x" % Rawdata)    #why it is a filler?
-                if Rawdata != 0x3c5c_7c5c_0000_0000_0000_0000_1234_4321_7d6d_7a5a_0000_0000_0000_0000_5566_6655:
-                    aligned = 0
-                    print("Line 374, ALignment loss Rawdata is %x" % Rawdata)
-                # Current frame state reevaluated
-                StatVal = 2*aligned
-                ChStat[StatVal][StatChan] = ChStat[StatVal][StatChan] + 1   
+                    if dbg == 1: print("received data is filler: %x" % Rawdata)    #why it is a filler?
+                if Rawdata == 0x3c5c_7c5c_0000_0000_0000_0000_1234_4321_7d6d_7a5a_0000_0000_0000_0000_5566_6655:
+                    ChStat[2][9] = ChStat[2][9] + 1 
+                else:
+                    channel_id = (
+                                     Rawdata & 0x7800_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000) >> (
+                                     123 + 128)  # channel Id
+                    crc32 = (
+                                Rawdata & 0x0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_ffff_ffff) >> 0
+                    cal_crc_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    for k in range(28):
+                        shift = 0xff00_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000 >> (k * 8)
+                        cal_crc_data[k] = (Rawdata & shift) >> (248 - k * 8)
+                    cal_crc32 = crc32_8(cal_crc_data[0], 0xffff_ffff)
+                    for k in range(27):
+                        cal_crc32_t = crc32_8(cal_crc_data[k + 1], cal_crc32)
+                        cal_crc32 = cal_crc32_t
+                        
+                    if cal_crc32 - crc32 == 0 and channel_id < 10:
+                        ChStat[2][channel_id] = ChStat[2][channel_id] + 1
+                    else:
+                        aligned = 0
+                        if dbg == 1: print("Line 407, ALignment loss Rawdata is %x" % Rawdata)
+                        ChStat[2][10] = ChStat[2][10] + 1
             # end if error_flag
         else:  # aligned != 1
             if i<200 and dbg == 1:
@@ -436,15 +453,22 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     # end for 6250. One buffer is done.
 
     #print("loops ended")
-        
-    for m in range(10):
-        ChanCnt = 0
-        for n in range(4):
-            ChanCnt = ChanCnt + ChStat[n][m]
-        #end for 
-        #print non-zero channel stat
-        if ChanCnt>0:
-            print(" file summary Chan %i: Aligned Err/OK=%i/%i Not aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m],ChStat[1][m],ChStat[0][m]))
+    for n in range(3):
+        ChanCnt_NA_OK = 0
+        ChanCnt_NA_Err = 0
+        if n == 0:
+            for m in range(11):
+                ChanCnt_NA_OK = ChanCnt_NA_OK + ChStat[n][m]
+        if n == 1:
+            for m in range(11):
+                ChanCnt_NA_Err = ChanCnt_NA_Err + ChStat[n][m]
+        print(" file summary: Not aligned Err/OK=%i/%i" % (ChanCnt_NA_Err,ChanCnt_NA_OK))
+        if n > 1:
+            for m in range(9):
+                print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
+            print(" file summary filler frames: %i" % (ChStat[2][9]))
+            print(" file summary ALignment loss: %i" % (ChStat[2][10]))
+            print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
         #end if
     #end for
     #print(" line 306 %s finished!" % self.name)
