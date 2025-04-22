@@ -45,17 +45,17 @@ def main():
     except FileExistsError:
         print("User define directories already created!!!")
     num_file = int(sys.argv[1])  # total files will be read back
-    dbg_mode_bool = int(sys.argv[2]) if len(sys.argv) > 2 else 0  # 1 - debug mode; 0/no parameter - normal mode
+    dbg_mode = int(sys.argv[2]) if len(sys.argv) > 2 else 0  # 1 - debug mode; 0/no parameter - normal mode
     store_dict = userdefine_dir
 
-    Receive_data(store_dict, num_file)
-    print(" line 51, All jobs are done!")
+    Receive_data(store_dict, num_file, dbg_mode)
+    print(" line 52, All jobs are done!")
 
 def print_bytes_hex(data):
     lin = ['0x%02X' % i for i in data]
     print(" ".join(lin))
 
-def generate_summary(result_dir):
+def generate_summary(result_dir, dbg_mode=0):
     
     dump_file = f"{result_dir}/ChAll.TXT"
     if os.path.exists(dump_file):
@@ -84,7 +84,7 @@ def generate_summary(result_dir):
 
     num_line = 0
     ind_frame = 0
-    dbg = True 
+    dbg = (dbg_mode == 1)
     
 
     for line in lines:
@@ -160,31 +160,12 @@ def generate_summary(result_dir):
             print(f"Ch{j} {ch_chan:4} {chan_event[j]:5} {tstart:17} / {tend:9} {del_minute:6.1f} "
                   f"{start_gen[j]:6} / {start_obs[j]:10}  {end_gen[j]:6} / {end_obs[j]:10}  "
                   f"{end_gen[j] - start_gen[j]:6} / {end_obs[j] - start_obs[j]:7}")
-            # out_file.write(f"Ch{j} {ch_chan:4} {chan_event[j]:5} {tstart:17} / {tend:9} {del_minute:6.1f} "
-            #                f"{start_gen[j]:6} / {start_obs[j]:10}  {end_gen[j]:6} / {end_obs[j]:10}  "
-            #                f"{end_gen[j] - start_gen[j]:6} / {end_obs[j] - start_obs[j]:7}\n")
-            
-
-        #for j in range(max_daq):
-        #     ch_chan = f"RX{rxchan[j]}" if rxchan[j] < 10 else f"TX{rxchan[j] - 10}"
-
-        #     if chan_event[j] == 0:
-        #         out_file.write(f"Ch{j} {ch_chan:4} {chan_event[j]:5}\n")
-        #     else:
-        #         tstart = datetime.fromtimestamp(start_time[j]).strftime("%Y-%m-%d %H:%M:%S")
-        #         tend = datetime.fromtimestamp(end_time[j]).strftime("%H:%M:%S")
-
-        #         del_minute = (end_time[j] - start_time[j]) / 60
-
-        #         out_file.write(f"Ch{j} {ch_chan:4} {chan_event[j]:5} {tstart:17} / {tend:9} {del_minute:6.1f} "
-        #                        f"{start_gen[j]:6} / {start_obs[j]:10}  {end_gen[j]:6} / {end_obs[j]:10}  "
-        #                        f"{end_gen[j] - start_gen[j]:6} / {end_obs[j] - start_obs[j]:7}\n")
 
     print(f"Summary written to {result_dir}/summary.txt")
 
 
 
-def Receive_data(store_dict, num_file):
+def Receive_data(store_dict, num_file, dbg_mode=0):
     # begin iic initilization -----------------------------------------------------------------------------------#
     # write, read back, and compare
 
@@ -259,23 +240,25 @@ def Receive_data(store_dict, num_file):
         if files % 10 == 0:
             print("{} is producing {} to the queue!".format('Receive_data', files))
         # end if files % 10 == 0 
-        exec_data(mem_data, store_dict)
+        exec_data(mem_data, store_dict, dbg_mode)
         # 20220428 #for i in range(50000):
         # 20220428 #    self.queue.put(mem_data[i])
     # end for files in range(self.num_file)
-    print("line 265, 'Receive_data' finished!")
-    generate_summary(store_dict)
+    print("line 266, 'Receive_data' finished!")
+    generate_summary(store_dict, dbg_mode)
     # 20220428 #self.queue.put(-1)
 # end def run
 # ---------------------------------------------------------------------------------------------#
 
 # ---------------------------------------------------------------------
 # ------------------------#
-def exec_data(mem_data, store_dict):
+def exec_data(mem_data, store_dict, dbg_mode=0):
     isEnd = False
     count = 0
     aligned = 0
     i = 0
+
+    dbg = (dbg_mode == 1)
     #
     # Collect frame stat=2*Aligned+Err by channel  
     # Ch=9 is filler without channel ID 
