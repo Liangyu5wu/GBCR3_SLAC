@@ -203,7 +203,7 @@ def Receive_data(store_dict, num_file):
     # iic_write_val = GBCR3_Reg1.configure_external_clock(iic_write_val)
     # iic_write_val = GBCR3_Reg1.configure_dll(iic_write_val)
     
-    print("Line 126, Written values are ", end = "")
+    print("Line 206, Written values are ", end = "")
     print_bytes_hex(iic_write_val)
     # ## write data into I2C register one by one
     for i in range(len(iic_write_val)):
@@ -262,7 +262,7 @@ def Receive_data(store_dict, num_file):
         # 20220428 #for i in range(50000):
         # 20220428 #    self.queue.put(mem_data[i])
     # end for files in range(self.num_file)
-    print("line 181, 'Receive_data' finished!")
+    print("line 265, 'Receive_data' finished!")
     generate_summary(store_dict)
     # 20220428 #self.queue.put(-1)
 # end def run
