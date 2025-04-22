@@ -388,7 +388,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                 ChStat[StatVal][StatChan] = ChStat[StatVal][StatChan] + 1   
             # end if error_flag
         else:  # aligned != 1
-            if i<200:
+            if i<200 and dbg==1 :
                 print("Not aligned chan=%i  Rawdata=%x" % (StatChan,Rawdata))
             while aligned == 0:
                 if i > 50000:
