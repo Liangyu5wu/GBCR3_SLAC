@@ -349,18 +349,15 @@ def exec_data(mem_data, store_dict):
                 print('%s %d %d %d %d %d %08x %08x %08x %d' % (
                     Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
                     expected_code, received_code, error_position, crc32))
-                with open("./%s/ChAll.TXT" % store_dict,
-                          'a') as infile:  # # 'a': add, will not cover previous infor
+                with open("./%s/ChAll.TXT" % store_dict, 'a') as infile:  # # 'a': add, will not cover previous infor
                     infile.write('%s %d %d %d %d %d %08x %08x %08x %d\n' % (
                         Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
                         expected_code, received_code, error_position, crc32))
                     infile.flush()
-                with open("./%s/Ch%d.TXT" % (store_dict, channel_id),
-                          'a') as infile:  # # 'a': add, will not cover previous infor
+                with open("./%s/Ch%d.TXT" % (store_dict, channel_id), 'a') as infile:  # # 'a': add, will not cover previous infor
                     infile.write('%s %d %d %d %d %d %08x %08x %08x %d\n' % (
                         Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
-                        expected_code, received_code,
-                        error_position, crc32))
+                        expected_code, received_code, error_position, crc32))
                     infile.flush()
                 # Frame stat Aligned with Error
                 if channel_id < 10:
@@ -371,10 +368,10 @@ def exec_data(mem_data, store_dict):
             else:  # error_flag != 1
                 count = count + 1
                 if count % 1000000 == 0:
-                    print("received data is filler: %x" % Rawdata)
+                    print("received data is filler: %x" % Rawdata)    #why it is a filler?
                 if Rawdata != 0x3c5c_7c5c_0000_0000_0000_0000_1234_4321_7d6d_7a5a_0000_0000_0000_0000_5566_6655:
                     aligned = 0
-                    print("Line 276, ALignment loss Rawdata is %x" % Rawdata)
+                    print("Line 374, ALignment loss Rawdata is %x" % Rawdata)
                 # Current frame state reevaluated
                 StatVal = 2*aligned
                 ChStat[StatVal][StatChan] = ChStat[StatVal][StatChan] + 1   
