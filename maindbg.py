@@ -491,6 +491,8 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         print(" Next File...")
         
     Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
+
+    data_exist_counter = ChanCnt_AL_OK + ChanCnt_AL_Err
     
     total_stats[0] += 1
     total_stats[1] += ChStat[2][9]
@@ -501,7 +503,8 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     total_stats[6] += ChStat[2][10]
     total_stats[7] += ChStat[3][10]
 
-    if ChanCnt_AL_OK == 0 and ChanCnt_AL_Err == 0:  total_stats[8] += 1
+    if data_exist_counter == 0:
+        total_stats[8] += 1
 
     print("Total_frames = %i" % (Total_frames))
 
