@@ -394,8 +394,6 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                     ChStat[3][10] = ChStat[3][10] + 1
                 #end if
             else:  # error_flag != 1
-                if count % 1000000 == 0:
-                    if dbg == 1: print("received data is filler: %x" % Rawdata)    #why it is a filler?
                 if Rawdata == 0x3c5c_7c5c_0000_0000_0000_0000_1234_4321_7d6d_7a5a_0000_0000_0000_0000_5566_6655:
                     ChStat[2][9] = ChStat[2][9] + 1 
                 else:
@@ -493,6 +491,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         print(" Next File...")
         
     Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
+    print("Total_frames = %i" % (Total_frames))
     
     total_stats[0] += 1
     total_stats[1] += ChStat[2][9]
