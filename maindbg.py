@@ -253,7 +253,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
             with open("./%s/IDD.TXT" % store_dict, 'a') as infile_Idd:
                 lasttime = datetime.datetime.now()
                 current = Current_monitor()
-                print("IDD: %s %.3f mA" % (lasttime, current[1]))
+                if dbg_mode == 1: print("IDD: %s %.3f mA" % (lasttime, current[1]))
                 infile_Idd.write("%s %.3f mA\n" % (lasttime, current[1]))
                 infile_Idd.flush()
             # end with
