@@ -503,8 +503,11 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     total_stats[6] += ChStat[2][10]
     total_stats[7] += ChStat[3][10]
 
+    print(data_exist_counter)
+
     if data_exist_counter == 0:
         total_stats[8] += 1
+    print(data_exist_counter)
 
     print("Total_frames = %i" % (Total_frames))
 
