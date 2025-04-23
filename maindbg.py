@@ -378,8 +378,8 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                     cal_crc32 = cal_crc32_t
 
                 Time = datetime.datetime.now()
-                if dbg == 1 and aligned_error_counter < 20: print('%s %d %d %d %d %d %08x %08x %08x %d' % (
-                    Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
+                if dbg == 1 and aligned_error_counter < 20: 
+                    print('%s %d %d %d %d %d %08x %08x %08x %d' % (Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
                     expected_code, received_code, error_position, crc32))
                 with open("./%s/ChAll.TXT" % store_dict, 'a') as infile:  # # 'a': add, will not cover previous infor
                     infile.write('%s %d %d %d %d %d %08x %08x %08x %d\n' % (
@@ -484,7 +484,8 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                 ChanCnt_NA_Err = ChanCnt_NA_Err + ChStat[n][m]
         if n > 1:
             for m in range(9):
-                print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
+                if dbg == 1:
+                    print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
                 ChanCnt_AL_Err += ChStat[3][m]
                 ChanCnt_AL_OK  += ChStat[2][m]
 
