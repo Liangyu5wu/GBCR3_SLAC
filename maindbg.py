@@ -273,14 +273,19 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
         if files % 10 == 0:
             if dbg_mode == 1: print("{} is producing {} to the queue!".format('Receive_data', files))
         # end if files % 10 == 0 
-        exec_data(mem_data, store_dict, dbg_mode)
+        # exec_data(mem_data, store_dict, dbg_mode)
+        file_stats = exec_data(mem_data, store_dict, dbg_mode)
+
+        for i in range(len(total_stats)):
+            total_stats[i] += file_stats[i]
+                
         if files % 20 == 0: print("{} files have been processed!".format(files))
         # 20220428 #for i in range(50000):
         # 20220428 #    self.queue.put(mem_data[i])
     # end for files in range(self.num_file)
     print("line 266, 'Receive_data' finished!")
 
-    print("Files Summary:")
+    print("\nFiles Summary:")
     print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  No_data_files\n')
     print("{}   {}   {}   {}   {}   {}   {}   {}   {}".format(total_stats[0], total_stats[1], total_stats[2], total_stats[3], total_stats[4]
                                                         , total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
@@ -469,6 +474,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     ChanCnt_AL_Err = 0
     ChanCnt_AL_OK = 0
     Total_frames = 0
+    
     for n in range(3):
         if n == 0:
             for m in range(11):
@@ -495,27 +501,20 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
 
     data_exist_counter = ChanCnt_AL_OK + ChanCnt_AL_Err
 
-    print("Total_frames = %i" % (Total_frames))
-
-    print(total_stats[0])
-    total_stats[0] += 1
-    total_stats[1] += ChStat[2][9]
-    total_stats[2] += ChanCnt_AL_OK
-    total_stats[3] += ChanCnt_AL_Err
-    total_stats[4] += ChanCnt_NA_Err
-    total_stats[5] += ChanCnt_NA_OK
-    total_stats[6] += ChStat[2][10]
-    total_stats[7] += ChStat[3][10]
-
-    print("Total_frames = %i" % (Total_frames))
-
-    if data_exist_counter == 0:
-        total_stats[8] += 1
+    file_stats = [1,
+                 ChStat[2][9], 
+                 ChanCnt_AL_OK, 
+                 ChanCnt_AL_Err, 
+                 ChanCnt_NA_Err, 
+                 ChanCnt_NA_OK, 
+                 ChStat[2][10], 
+                 ChStat[3][10],
+                 1 if data_exist_counter == 0 else 0]
 
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
-                    infile.write('%d %d %d %d %d %d %d\n' % (
-                        total_stats[0], ChStat[2][9], ChanCnt_AL_OK, ChanCnt_AL_Err, ChanCnt_NA_Err, ChanCnt_NA_OK, ChStat[2][10], ChStat[3][10], Total_frames))
+                    infile.write('%d %d %d %d %d %d %d %d %d\n' % (
+                        file_stats[0], file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
                     infile.flush()
         #end if
     #end for
