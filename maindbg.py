@@ -516,6 +516,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
                     infile.write('%d %d %d %d %d %d %d %d %d\n' % (
                         file_stats[0], file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
                     infile.flush()
+    return file_stats
         #end if
     #end for
     #print(" line 306 %s finished!" % self.name)
