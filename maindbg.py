@@ -281,8 +281,8 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     print("line 266, 'Receive_data' finished!")
 
     print("Files Summary:")
-    print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID\n')
-    print("{}   {}   {}   {}   {}   {}   {}   {}".format(total_stats[0], total_stats[1], total_stats[2], total_stats[3], total_stats[4]
+    print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  No_data_files\n')
+    print("{}   {}   {}   {}   {}   {}   {}   {}   {}".format(total_stats[0], total_stats[1], total_stats[2], total_stats[3], total_stats[4]
                                                         , total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
     
     generate_summary(store_dict, dbg_mode)
@@ -502,6 +502,8 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     total_stats[5] += ChanCnt_NA_OK
     total_stats[6] += ChStat[2][10]
     total_stats[7] += ChStat[3][10]
+
+    if ChanCnt_AL_OK == 0 and ChanCnt_AL_Err == 0:  total_stats[8] += 1
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
                     infile.write('%d %d %d %d %d %d %d\n' % (
