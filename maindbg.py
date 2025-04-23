@@ -265,7 +265,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
             mem_data.append(0)
         mem_data.append(-1)
         if files % 10 == 0:
-            print("{} is producing {} to the queue!".format('Receive_data', files))
+            if dbg_mode == 1: print("{} is producing {} to the queue!".format('Receive_data', files))
         # end if files % 10 == 0 
         exec_data(mem_data, store_dict, dbg_mode)
         # 20220428 #for i in range(50000):
