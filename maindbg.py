@@ -287,8 +287,9 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
 
     print("\nFiles Summary:")
     print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  No_data_files\n')
-    print("{}   {}   {}   {}   {}   {}   {}   {}   {}".format(total_stats[0], total_stats[1], total_stats[2], total_stats[3], total_stats[4]
-                                                        , total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
+    print("{:<10} {:<14} {:<11} {:<12} {:<15} {:<14} {:<15} {:<14} {:<13}".format(
+        total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
+        total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
     
     generate_summary(store_dict, dbg_mode)
     # 20220428 #self.queue.put(-1)
