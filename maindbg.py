@@ -492,7 +492,11 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         
     Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
 
+    print(data_exist_counter)
+
     data_exist_counter = ChanCnt_AL_OK + ChanCnt_AL_Err
+
+    print(data_exist_counter)
     
     total_stats[0] += 1
     total_stats[1] += ChStat[2][9]
@@ -505,9 +509,9 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
 
     print(data_exist_counter)
 
+
     if data_exist_counter == 0:
         total_stats[8] += 1
-    print(data_exist_counter)
 
     print("Total_frames = %i" % (Total_frames))
 
