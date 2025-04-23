@@ -469,6 +469,11 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     print(" file summary filler frames: %i" % (ChStat[2][9]))
     print(" file summary ALignment loss: %i" % (ChStat[2][10]))
     print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
+
+    with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
+                    infile.write('%d %d %d %d %d\n' % (
+                        ChanCnt_NA_Err, ChanCnt_NA_OK, ChStat[2][9], ChStat[2][10], ChStat[3][10]))
+                    infile.flush()
         #end if
     #end for
     #print(" line 306 %s finished!" % self.name)
