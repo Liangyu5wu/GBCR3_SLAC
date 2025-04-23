@@ -491,7 +491,6 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         print(" Next File...")
         
     Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
-    print("Total_frames = %i" % (Total_frames))
     
     total_stats[0] += 1
     total_stats[1] += ChStat[2][9]
@@ -503,6 +502,8 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     total_stats[7] += ChStat[3][10]
 
     if ChanCnt_AL_OK == 0 and ChanCnt_AL_Err == 0:  total_stats[8] += 1
+
+    print("Total_frames = %i" % (Total_frames))
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
                     infile.write('%d %d %d %d %d %d %d\n' % (
