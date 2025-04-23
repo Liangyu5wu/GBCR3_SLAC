@@ -479,8 +479,10 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         if n > 1:
             for m in range(9):
                 print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
-                ChanCnt_AL_Err = ChanCnt_AL_Err + ChStat[3][m]
-                ChanCnt_AL_OK  = ChanCnt_AL_OK  + ChStat[2][m]
+                print("check")
+                ChanCnt_AL_Err += ChStat[3][m]
+                ChanCnt_AL_OK  += ChStat[2][m]
+                print("check")
     if dbg == 1:
         print(" file summary filler frames= %i" % (ChStat[2][9]))
         print(" file summary aligned data OK= %i" % (ChanCnt_AL_OK))
@@ -492,11 +494,7 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         
     Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
 
-    print(data_exist_counter)
-
     data_exist_counter = ChanCnt_AL_OK + ChanCnt_AL_Err
-
-    print(data_exist_counter)
     
     total_stats[0] += 1
     total_stats[1] += ChStat[2][9]
@@ -506,9 +504,6 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     total_stats[5] += ChanCnt_NA_OK
     total_stats[6] += ChStat[2][10]
     total_stats[7] += ChStat[3][10]
-
-    print(data_exist_counter)
-
 
     if data_exist_counter == 0:
         total_stats[8] += 1
