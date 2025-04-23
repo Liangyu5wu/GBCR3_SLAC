@@ -490,17 +490,14 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         print(" file summary ALignment loss: %i" % (ChStat[2][10]))
         print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
         print(" Next File...")
-
-    print("Total_frames = %i" % (Total_frames))
         
     Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
-
-    print("Total_frames = %i" % (Total_frames))
 
     data_exist_counter = ChanCnt_AL_OK + ChanCnt_AL_Err
 
     print("Total_frames = %i" % (Total_frames))
-    
+
+    print(total_stats[0])
     total_stats[0] += 1
     total_stats[1] += ChStat[2][9]
     total_stats[2] += ChanCnt_AL_OK
