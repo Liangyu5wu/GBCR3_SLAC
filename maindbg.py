@@ -268,6 +268,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
             if dbg_mode == 1: print("{} is producing {} to the queue!".format('Receive_data', files))
         # end if files % 10 == 0 
         exec_data(mem_data, store_dict, dbg_mode)
+        if files % 20 == 0: print("{} files have been processed!".format(files))
         # 20220428 #for i in range(50000):
         # 20220428 #    self.queue.put(mem_data[i])
     # end for files in range(self.num_file)
@@ -465,10 +466,11 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         if n > 1:
             for m in range(9):
                 print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
-    print(" file summary: Not aligned Err/OK=%i/%i" % (ChanCnt_NA_Err,ChanCnt_NA_OK))
-    print(" file summary filler frames: %i" % (ChStat[2][9]))
-    print(" file summary ALignment loss: %i" % (ChStat[2][10]))
-    print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
+    if dbg == 1:
+        print(" file summary: Not aligned Err/OK=%i/%i" % (ChanCnt_NA_Err,ChanCnt_NA_OK))
+        print(" file summary filler frames: %i" % (ChStat[2][9]))
+        print(" file summary ALignment loss: %i" % (ChStat[2][10]))
+        print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
                     infile.write('%d %d %d %d %d\n' % (
