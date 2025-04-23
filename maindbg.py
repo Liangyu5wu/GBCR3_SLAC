@@ -229,6 +229,12 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
         print("Written != Read: %s"%(iic_read_val))
     #end iic initilization -----------------------------------------------------------------------------------#
 
+    if os.path.exists(f"./{store_dict}/Filesummary.TXT") == False:
+    with open(f"./{store_dict}/Filesummary.TXT", 'w') as infile:
+        infile.write('# File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  Total_Frames\n')
+
+    total_stats = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 
     for files in range(num_file):
 
@@ -273,6 +279,12 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
         # 20220428 #    self.queue.put(mem_data[i])
     # end for files in range(self.num_file)
     print("line 266, 'Receive_data' finished!")
+
+    print("Files Summary:")
+    print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID\n')
+    print("{}   {}   {}   {}   {}   {}   {}   {}".format(total_stats[0], total_stats[1], total_stats[2], total_stats[3], total_stats[4]
+                                                        , total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
+    
     generate_summary(store_dict, dbg_mode)
     # 20220428 #self.queue.put(-1)
 # end def run
@@ -456,6 +468,9 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     #print("loops ended")
     ChanCnt_NA_OK = 0
     ChanCnt_NA_Err = 0
+    ChanCnt_AL_Err = 0
+    ChanCnt_AL_OK = 0
+    Total_frames = 0
     for n in range(3):
         if n == 0:
             for m in range(11):
@@ -466,15 +481,31 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
         if n > 1:
             for m in range(9):
                 print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
+                ChanCnt_AL_Err = ChanCnt_AL_Err + ChStat[3][m]
+                ChanCnt_AL_OK  = ChanCnt_AL_OK  + ChStat[2][m]
     if dbg == 1:
+        print(" file summary filler frames= %i" % (ChStat[2][9]))
+        print(" file summary aligned data OK= %i" % (ChanCnt_AL_OK))
+        print(" file summary aligned data Err= %i" % (ChanCnt_AL_Err))
         print(" file summary: Not aligned Err/OK=%i/%i" % (ChanCnt_NA_Err,ChanCnt_NA_OK))
-        print(" file summary filler frames: %i" % (ChStat[2][9]))
         print(" file summary ALignment loss: %i" % (ChStat[2][10]))
         print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
+        print(" Next File...")
+        
+    Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
+    
+    total_stats[0] += 1
+    total_stats[1] += ChStat[2][9]
+    total_stats[2] += ChanCnt_AL_OK
+    total_stats[3] += ChanCnt_AL_Err
+    total_stats[4] += ChanCnt_NA_Err
+    total_stats[5] += ChanCnt_NA_OK
+    total_stats[6] += ChStat[2][10]
+    total_stats[7] += ChStat[3][10]
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
-                    infile.write('%d %d %d %d %d\n' % (
-                        ChanCnt_NA_Err, ChanCnt_NA_OK, ChStat[2][9], ChStat[2][10], ChStat[3][10]))
+                    infile.write('%d %d %d %d %d %d %d\n' % (
+                        total_stats[0], ChStat[2][9], ChanCnt_AL_OK, ChanCnt_AL_Err, ChanCnt_NA_Err, ChanCnt_NA_OK, ChStat[2][10], ChStat[3][10], Total_frames))
                     infile.flush()
         #end if
     #end for
