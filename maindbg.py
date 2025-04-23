@@ -18,7 +18,7 @@ from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 import pandas as pd
 from collections import defaultdict
 
-from GBCR3_Reg import *
+from GBCR3_Reg_new import *
 from command_interpret import *
 from crc32_8 import crc32_8
 
@@ -453,22 +453,22 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     # end for 6250. One buffer is done.
 
     #print("loops ended")
+    ChanCnt_NA_OK = 0
+    ChanCnt_NA_Err = 0
     for n in range(3):
-        ChanCnt_NA_OK = 0
-        ChanCnt_NA_Err = 0
         if n == 0:
             for m in range(11):
                 ChanCnt_NA_OK = ChanCnt_NA_OK + ChStat[n][m]
         if n == 1:
             for m in range(11):
                 ChanCnt_NA_Err = ChanCnt_NA_Err + ChStat[n][m]
-        print(" file summary: Not aligned Err/OK=%i/%i" % (ChanCnt_NA_Err,ChanCnt_NA_OK))
         if n > 1:
             for m in range(9):
                 print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
-            print(" file summary filler frames: %i" % (ChStat[2][9]))
-            print(" file summary ALignment loss: %i" % (ChStat[2][10]))
-            print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
+    print(" file summary: Not aligned Err/OK=%i/%i" % (ChanCnt_NA_Err,ChanCnt_NA_OK))
+    print(" file summary filler frames: %i" % (ChStat[2][9]))
+    print(" file summary ALignment loss: %i" % (ChStat[2][10]))
+    print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
         #end if
     #end for
     #print(" line 306 %s finished!" % self.name)
