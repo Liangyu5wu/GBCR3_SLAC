@@ -230,8 +230,8 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     #end iic initilization -----------------------------------------------------------------------------------#
 
     if os.path.exists(f"./{store_dict}/Filesummary.TXT") == False:
-    with open(f"./{store_dict}/Filesummary.TXT", 'w') as infile:
-        infile.write('# File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  Total_Frames\n')
+        with open(f"./{store_dict}/Filesummary.TXT", 'w') as infile:
+            infile.write('# File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  Total_Frames\n')
 
     total_stats = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
