@@ -236,7 +236,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     total_stats = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     current_file_number = 0
 
-    single_ch_stats = [0] * 16
+    single_ch_stats = [0] * 18
 
 
     for files in range(num_file):
@@ -302,7 +302,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     print("\nChannel Statistics Summary:")
     print("Channel | Aligned OK | Aligned Error")
     print("--------|------------|-------------")
-    for i in range(8):
+    for i in range(9):
         print(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+8]:6d}")
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
@@ -312,7 +312,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
         infile.write("Channel Statistics Summary:\n")
         infile.write("Channel | Aligned OK | Aligned Error\n")
         infile.write("--------|------------|-------------\n")
-        for i in range(8):
+        for i in range(9):
             ch_file.write(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+8]:6d}\n")
         infile.flush()
     
@@ -532,9 +532,9 @@ def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
                  ChStat[3][10], 1 if data_exist_counter == 0 else 0]
 
     current_channel_stats = []
-    for i in range(8):
+    for i in range(9):
         current_channel_stats.append(ChStat[2][i]) 
-    for i in range(8):
+    for i in range(9):
         current_channel_stats.append(ChStat[3][i])
 
 
