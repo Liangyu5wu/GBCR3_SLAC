@@ -286,10 +286,16 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     print("line 266, 'Receive_data' finished!")
 
     print("\nFiles Summary:")
-    print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  No_data_files\n')
+    print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
     print("{:<10} {:<14} {:<11} {:<12} {:<15} {:<14} {:<15} {:<14} {:<13}".format(
         total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
         total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
+
+    with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
+        print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
+        infile.write('%d %d %d %d %d %d %d %d %d\n' % (total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
+                                                       total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
+        infile.flush()
     
     generate_summary(store_dict, dbg_mode)
     # 20220428 #self.queue.put(-1)
@@ -515,9 +521,9 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
 
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
-                    infile.write('%d %d %d %d %d %d %d %d %d\n' % (
-                        file_stats[0], file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
-                    infile.flush()
+        infile.write('%d %d %d %d %d %d %d %d %d\n' % (
+                    file_stats[0], file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
+        infile.flush()
     return file_stats
         #end if
     #end for
