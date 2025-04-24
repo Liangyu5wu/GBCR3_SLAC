@@ -313,7 +313,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
         infile.write("Channel | Aligned OK | Aligned Error\n")
         infile.write("--------|------------|-------------\n")
         for i in range(9):
-            ch_file.write(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+8]:6d}\n")
+            infile.write(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+8]:6d}\n")
         infile.flush()
     
     generate_summary(store_dict, dbg_mode)
