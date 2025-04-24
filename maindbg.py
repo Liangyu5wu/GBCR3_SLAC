@@ -292,7 +292,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
         total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
-        print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
+        infile.write('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
         infile.write('%d %d %d %d %d %d %d %d %d\n' % (total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
                                                        total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
         infile.flush()
