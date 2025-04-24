@@ -234,14 +234,14 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
             infile.write('# File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  Total_Frames\n')
 
     total_stats = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    current_file_number = 0
 
-    signal_ch_stats = [
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0]
-    ]
+    single_ch_stats = [0] * 16
 
 
     for files in range(num_file):
+
+        current_file_number += 1
 
         if files % 10 == 0:
             # # read back data from I2C register one by one
@@ -279,10 +279,13 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
             if dbg_mode == 1: print("{} is producing {} to the queue!".format('Receive_data', files))
         # end if files % 10 == 0 
         # exec_data(mem_data, store_dict, dbg_mode)
-        file_stats = exec_data(mem_data, store_dict, dbg_mode)
+        file_stats, current_channel_stats = exec_data(mem_data, store_dict, dbg_mode, current_file_number)
 
         for i in range(len(total_stats)):
             total_stats[i] += file_stats[i]
+
+        for i in range(len(current_channel_stats)):
+            single_ch_stats[i] += current_channel_stats[i]
             
         if files % 20 == 0: print("{} files have been processed!".format(files))
         # 20220428 #for i in range(50000):
@@ -296,10 +299,21 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
         total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
         total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
 
+    print("\nChannel Statistics Summary:")
+    print("Channel | Aligned OK | Aligned Error")
+    print("--------|------------|-------------")
+    for i in range(8):
+        print(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+8]:6d}")
+
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
         infile.write('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
         infile.write('%d %d %d %d %d %d %d %d %d\n' % (total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
                                                        total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
+        infile.write("Channel Statistics Summary:\n")
+        infile.write("Channel | Aligned OK | Aligned Error\n")
+        infile.write("--------|------------|-------------\n")
+        for i in range(8):
+            ch_file.write(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+8]:6d}\n")
         infile.flush()
     
     generate_summary(store_dict, dbg_mode)
@@ -309,7 +323,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
 
 # ---------------------------------------------------------------------
 # ------------------------#
-def exec_data(mem_data, store_dict, dbg_mode=0):
+def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
     isEnd = False
     count = 0
     aligned = 0
@@ -517,12 +531,18 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
     file_stats = [1,ChStat[2][9], ChanCnt_AL_OK, ChanCnt_AL_Err, ChanCnt_NA_Err, ChanCnt_NA_OK, ChStat[2][10], 
                  ChStat[3][10], 1 if data_exist_counter == 0 else 0]
 
+    current_channel_stats = []
+    for i in range(8):
+        current_channel_stats.append(ChStat[2][i]) 
+    for i in range(8):
+        current_channel_stats.append(ChStat[3][i])
+
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
         infile.write('%d %d %d %d %d %d %d %d %d\n' % (
-                    file_stats[0], file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
+                    current_file_number, file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
         infile.flush()
-    return file_stats
+    return file_stats, current_channel_stats
         #end if
     #end for
     #print(" line 306 %s finished!" % self.name)
