@@ -235,6 +235,11 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
 
     total_stats = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+    signal_ch_stats = [
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0]
+    ]
+
 
     for files in range(num_file):
 
@@ -278,7 +283,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
 
         for i in range(len(total_stats)):
             total_stats[i] += file_stats[i]
-                
+            
         if files % 20 == 0: print("{} files have been processed!".format(files))
         # 20220428 #for i in range(50000):
         # 20220428 #    self.queue.put(mem_data[i])
@@ -509,15 +514,8 @@ def exec_data(mem_data, store_dict, dbg_mode=0):
 
     data_exist_counter = ChanCnt_AL_OK + ChanCnt_AL_Err
 
-    file_stats = [1,
-                 ChStat[2][9], 
-                 ChanCnt_AL_OK, 
-                 ChanCnt_AL_Err, 
-                 ChanCnt_NA_Err, 
-                 ChanCnt_NA_OK, 
-                 ChStat[2][10], 
-                 ChStat[3][10],
-                 1 if data_exist_counter == 0 else 0]
+    file_stats = [1,ChStat[2][9], ChanCnt_AL_OK, ChanCnt_AL_Err, ChanCnt_NA_Err, ChanCnt_NA_OK, ChStat[2][10], 
+                 ChStat[3][10], 1 if data_exist_counter == 0 else 0]
 
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
