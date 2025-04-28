@@ -542,6 +542,10 @@ def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
         infile.write('%d %d %d %d %d %d %d %d %d\n' % (
                     current_file_number, file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
         infile.flush()
+
+        infile.write('Channel Aligned_OK Aligned_Error\n')
+        for i in range(9):
+            infile.write('Channel_%d %d %d\n' % (i, current_channel_stats[i], current_channel_stats[9 + i]))
     return file_stats, current_channel_stats
         #end if
     #end for
