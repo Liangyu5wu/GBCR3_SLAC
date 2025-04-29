@@ -60,7 +60,7 @@ def generate_summary(result_dir, dbg_mode=0):
     dump_file = f"{result_dir}/ChAll.TXT"
     if os.path.exists(dump_file):
         with open(dump_file, 'r') as in_file:
-            print(f"Opened dump file: {dump_file}") 
+            if dbg_mode == 1: print(f"Opened dump file: {dump_file}") 
             lines = in_file.readlines()
     else:
         print(f"Error in opening result file: {dump_file}")
