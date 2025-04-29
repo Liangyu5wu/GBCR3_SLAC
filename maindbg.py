@@ -56,11 +56,13 @@ def print_bytes_hex(data):
     print(" ".join(lin))
 
 def generate_summary(result_dir, dbg_mode=0):
+
+    dbg = (dbg_mode == 1)
     
     dump_file = f"{result_dir}/ChAll.TXT"
     if os.path.exists(dump_file):
         with open(dump_file, 'r') as in_file:
-            if dbg_mode == 1: print(f"Opened dump file: {dump_file}") 
+            if dbg == 1: print(f"Opened dump file: {dump_file}") 
             lines = in_file.readlines()
     else:
         print(f"Error in opening result file: {dump_file}")
@@ -97,7 +99,6 @@ def generate_summary(result_dir, dbg_mode=0):
 
     num_line = 0
     ind_frame = 0
-    dbg = (dbg_mode == 1)
     
 
     for line in lines:
@@ -113,15 +114,10 @@ def generate_summary(result_dir, dbg_mode=0):
 
         try:
             chan, injgen, injobs, delCRC, timeStamp, expCode, obsCode, ErrMask, CDC32 = ( int(tokens[0]), int(tokens[1]), int(tokens[2]), int(tokens[3]), 
-                int(tokens[4]), int(tokens[5], 16), int(tokens[6], 16), int(tokens[7], 16), int(tokens[8]))
+                int(tokens[4]), int(tokens[5], 16), int(tokens[6], 16), int(tokens[7], 16), int(tokens[8]) )
         except ValueError as e:
             print(f"Error parsing line: {line}. Error: {e}")
             continue
-
-        errcnt = 0
-        for m in range(32):
-            if (ErrMask & (1 << m)) != 0:
-                errcnt += 1
 
         if chan_event[chan] == 0:
             ch_date_time_trimmed = ch_date_time.split('.')[0]
@@ -141,6 +137,7 @@ def generate_summary(result_dir, dbg_mode=0):
             start_second[chan] = second
             start_gen[chan]    = injgen
             start_obs[chan]    = injobs
+            chan_event[chan]  += 1
 
         #end_time[chan] = datetime.strptime(ch_date_time, "%Y-%m-%d %H:%M:%S")
         ch_date_time_trimmed = ch_date_time.split('.')[0]
