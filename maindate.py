@@ -84,19 +84,6 @@ def generate_summary(result_dir, dbg_mode=0):
     end_gen = [0] * max_daq
     start_obs = [0] * max_daq
     end_obs = [0] * max_daq
-    
-    start_year = [0] * max_daq
-    end_year = [0] * max_daq
-    start_month = [0] * max_daq
-    end_month = [0] * max_daq
-    start_day = [0] * max_daq
-    end_day = [0] * max_daq
-    start_hour = [0] * max_daq
-    end_hour = [0] * max_daq
-    start_minute = [0] * max_daq
-    end_minute = [0] * max_daq
-    start_second = [0] * max_daq
-    end_second = [0] * max_daq
 
     max_frame = 2000
 
@@ -121,10 +108,12 @@ def generate_summary(result_dir, dbg_mode=0):
         except ValueError as e:
             print(f"Error parsing line: {line}. Error: {e}")
             continue
-
+        print("check1")
         try:
             date_time_parts = ch_date_time.strip().split('.')
+            print("check2")
             date_time_str = date_time_parts[0]
+            print("check3")
             
             year = int(date_time_str[0:4])
             month = int(date_time_str[5:7])
@@ -132,12 +121,16 @@ def generate_summary(result_dir, dbg_mode=0):
             hour = int(date_time_str[11:13])
             minute = int(date_time_str[14:16])
             second = int(date_time_str[17:19])
+            print("check4")
 
             current_time = datetime(year, month, day, hour, minute, second)
+            print("check5")
             
             if len(date_time_parts) > 1:
                 ms = int(date_time_parts[1][:3])
+                print("check6")
                 current_time = current_time.replace(microsecond=ms*1000)
+                print("check7")
         except ValueError as e:
             print(f"Error parsing datetime: {ch_date_time}. Error: {e}")
             continue
@@ -152,7 +145,7 @@ def generate_summary(result_dir, dbg_mode=0):
         end_gen[chan] = injgen
         end_obs[chan] = injobs
         chan_event[chan] += 1
-
+    print("check8")
     print("End Run Summary\n")
     print("DAQ Lane  Nevt  Date time   Start/ End       dT(min)   Start Inj/Obs     End Inj/Obs             Ninj/    Nobs\n");
     with open(f"{result_dir}/summary.txt", 'w') as out_file:
@@ -167,10 +160,12 @@ def generate_summary(result_dir, dbg_mode=0):
                 out_file.write(f"Ch{j} {ch_chan:4} {chan_event[j]:5}\n")
             print(f"Ch{j} {ch_chan:4} {chan_event[j]:5}")
         else:
+            print("check9")
             tstart = start_time_dt[j].strftime("%Y-%m-%d %H:%M:%S")
             tend = end_time_dt[j].strftime("%H:%M:%S")
 
             time_diff = end_time_dt[j] - start_time_dt[j]
+            print("check10")
             del_minute = time_diff.total_seconds() / 60
             
             with open(f"{result_dir}/summary.txt", 'a') as out_file:
