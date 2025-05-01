@@ -137,7 +137,6 @@ def generate_summary(result_dir, dbg_mode=0):
             start_second[chan] = second
             start_gen[chan]    = injgen
             start_obs[chan]    = injobs
-            chan_event[chan]  += 1
 
         #end_time[chan] = datetime.strptime(ch_date_time, "%Y-%m-%d %H:%M:%S")
         ch_date_time_trimmed = ch_date_time.split('.')[0]
