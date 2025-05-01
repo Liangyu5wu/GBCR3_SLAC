@@ -299,7 +299,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     print("Channel | Aligned OK | Aligned Error")
     print("--------|------------|-------------")
     for i in range(9):
-        print(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+8]:6d}")
+        print(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+9]:6d}")
 
     with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
         infile.write('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
