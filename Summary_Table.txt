@@ -1,0 +1,33 @@
+Files Summary:
+File_num   Filler_Frames   Aligned_OK   Aligned_Err   NotAligned_Err   NotAligned_OK   Alignment_Loss   Bad_ChannelID   All_filler_files
+60         374911          4            25            0                0               0                0               56
+
+Channel Statistics Summary:
+Channel   | Aligned OK | Aligned Error
+--------------------------------------
+0         | 0          | 5         
+1         | 0          | 0           
+2         | 0          | 0         
+3         | 0          | 0        
+4         | 0          | 5       
+5         | 0          | 5  
+6         | 0          | 5        
+7         | 0          | 5         
+8         | 4          | 0     
+
+Opened dump file: QAResults/2025-04-24_16-24-35/ChAll.TXT
+End Run Summary
+
+DAQ Lane   Nevt   Date time                Start / End                dT(min)   Start Inj/Obs   End Inj/Obs   Ninj/   Nobs
+Ch0 RX5    5      2025-04-24 16:24:52      16:25:45                   0.9       6754 / 6754     6758 / 6758   5 /     5
+Ch1 RX6    0      -                       -                           -         -               -             -
+Ch2 RX7    0      -                       -                           -         -               -             -
+Ch3 TX2    0      -                       -                           -         -               -             -
+Ch4 RX1    5      2025-04-24 16:24:52      16:25:45                   0.9       6754 / 6753     6757 / 6757   5 /     5
+Ch5 RX2    5      2025-04-24 16:24:52      16:25:45                   0.9       6754 / 6754     6758 / 6758   5 /     5
+Ch6 RX3    5      2025-04-24 16:24:52      16:25:45                   0.9       6753 / 6753     6757 / 6757   5 /     5
+Ch7 RX4    5      2025-04-24 16:24:52      16:25:45                   0.9       6754 / 6754     6758 / 6758   5 /     5
+Ch8 TX1    0      -                       -                           -         -               -             -
+
+Summary written to QAResults/2025-04-24_16-24-35/summary.txt
+line 52. All jobs are done!
