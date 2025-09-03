@@ -3,6 +3,7 @@ connect_hw_server
 open_hw_target
 
 set BITFILE_PATH "GBCR2_SEU_Test.bit"
+#set BITFILE_PATH "firmware/GBCR2_SEU_Test.bit"
 
 set current_device [lindex [get_hw_devices] 0]
 refresh_hw_device -update_hw_probes false $current_device
