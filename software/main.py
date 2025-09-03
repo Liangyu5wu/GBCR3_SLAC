@@ -18,7 +18,7 @@ from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 import pandas as pd
 from collections import defaultdict
 
-from GBCR3_Reg_new import *
+from GBCR3_Reg import *
 from command_interpret import *
 from crc32_8 import crc32_8
 
