@@ -73,6 +73,8 @@ def generate_summary(result_dir, dbg_mode=0):
 
     max_daq = 9
     rxchan = [5, 6, 7, 12, 1, 2, 3, 4, 11]
+    #After swapping
+    #rxchan = [2, 3, 4, 12, 1, 5, 6, 7, 11]
 
     start_time = [0] * max_daq
     end_time = [0] * max_daq
@@ -203,6 +205,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     iic_write_val = GBCR3_Reg1.configure_all(iic_write_val)
 
     #If you would like to use the Different values, comment the line above and:
+    # iic_write_val = GBCR3_Reg1.configure_rx_channels(iic_write_val, ch=6, MUX_bias=0xf, dllClkDelay=0xf)
     # iic_write_val = GBCR3_Reg1.configure_rx_channels(iic_write_val, ch=6, dis_chan=1)
     # iic_write_val = GBCR3_Reg1.configure_tx(iic_write_val)
     # iic_write_val = GBCR3_Reg1.configure_external_clock(iic_write_val)
@@ -210,6 +213,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0):
     
     print("Line 206, Written values are ", end = "")
     print_bytes_hex(iic_write_val)
+    cmd_interpret.write_pulse_reg(0x0004)
     # ## write data into I2C register one by one
     for i in range(len(iic_write_val)):
         iic_write(1, Slave_Addr, 0, i, iic_write_val[i])
