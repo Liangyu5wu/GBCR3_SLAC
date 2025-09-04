@@ -31,3 +31,79 @@ Ch8 TX1    0      -                       -                           -         
 
 Summary written to QAResults/2025-04-24_16-24-35/summary.txt
 line 52. All jobs are done!
+
+
+
+
+
+
+Disable RX1
+
+Files Summary:
+File_num   Filler_Frames   Aligned_OK   Aligned_Err   NotAligned_Err   NotAligned_OK   Alignment_Loss   Bad_ChannelID   All_filler_files
+60         374892          8            40            0                0               0                0               55
+
+Channel Statistics Summary:
+Channel   | Aligned OK | Aligned Error
+--------------------------------------
+0         | 0          | 8         
+1         | 0          | 8           
+2         | 0          | 0         
+3         | 0          | 0        
+4         | 0          | 0       
+5         | 0          | 8  
+6         | 0          | 8        
+7         | 0          | 8         
+8         | 8          | 0     
+
+End Run Summary
+
+DAQ Lane   Nevt   Date time                Start / End                dT(min)   Start Inj/Obs   End Inj/Obs   Ninj/   Nobs
+Ch0 RX5    8      2025-09-04 16:20:11      16:21:01                   0.8       11 / 11         18 /18        8 /     8
+Ch1 RX6    8      2025-09-04 16:20:11      16:21:01                   0.8       11 / 11         18 /18        8 /     8
+Ch2 RX7    0      -                       -                           -         -               -             -
+Ch3 TX2    0      -                       -                           -         -               -             -
+Ch4 RX1    0      -                       -                           -         -               -             -
+Ch5 RX2    8      2025-09-04 16:20:11      16:21:01                   0.8       11 / 11         18 /18        8 /     8
+Ch6 RX3    8      2025-09-04 16:20:11      16:21:01                   0.8       11 / 11         18 /18        8 /     8
+Ch7 RX4    8      2025-09-04 16:20:11      16:21:01                   0.8       11 / 11         18 /18        8 /     8
+Ch8 TX1    0      -                       -                           -         -               -             -
+
+Summary written to QAResults_v2/2025-09-04_16-19-55/summary.txt
+line 52. All jobs are done!
+
+
+Retimed RX4 Delay 0x8
+
+Files Summary:
+File_num   Filler_Frames   Aligned_OK   Aligned_Err   NotAligned_Err   NotAligned_OK   Alignment_Loss   Bad_ChannelID   All_filler_files
+60         374839          3            98            0                0               0                0               34
+
+Channel Statistics Summary:
+Channel   | Aligned OK | Aligned Error
+--------------------------------------
+0         | 0          | 3         
+1         | 0          | 3           
+2         | 0          | 0         
+3         | 0          | 0        
+4         | 0          | 3       
+5         | 0          | 3  
+6         | 0          | 3        
+7         | 0          | 83         
+8         | 3          | 0     
+
+End Run Summary
+
+DAQ Lane   Nevt   Date time                Start / End                dT(min)   Start Inj/Obs   End Inj/Obs   Ninj/   Nobs
+Ch0 RX5    3      2025-09-04 16:34:19      16:34:58                   0.7       47 / 47         49 /49        3 /     3
+Ch1 RX6    3      2025-09-04 16:34:19      16:34:58                   0.7       47 / 47         49 /49        3 /     3
+Ch2 RX7    0      -                       -                           -         -               -             -
+Ch3 TX2    0      -                       -                           -         -               -             -
+Ch4 RX1    3      2025-09-04 16:34:19      16:34:58                   0.7       47 / 47         49 /49        3 /     3
+Ch5 RX2    3      2025-09-04 16:34:19      16:34:58                   0.7       47 / 47         49 /49        3 /     3
+Ch6 RX3    3      2025-09-04 16:34:19      16:34:58                   0.7       47 / 47         49 /49        3 /     3
+Ch7 RX4   83      2025-09-04 16:34:19      16:34:13                   0.9       47 / 47         50 /131       4 /     85
+Ch8 TX1    0      -                       -                           -         -               -             -
+
+Summary written to QAResults_v2/2025-09-04_16-34-03/summary.txt
+line 52. All jobs are done!
