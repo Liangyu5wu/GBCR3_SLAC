@@ -48,6 +48,9 @@ python main_v2.py 100 1 --tx-config "ch1:ampl=0x7,sr1=0x4"
 
 # Configure clock parameters
 python main_v2.py 100 1 --clock-config "rx_en=1,tx_delay=0xc"
+
+# Disable a specific channel (CH4)
+python main_v2.py 100 1 --rx-config "ch4:dis_chan=1"
 ```
 
 ## Parameter Reference
