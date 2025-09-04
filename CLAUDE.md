@@ -165,4 +165,25 @@ Both versions generate timestamped directories:
 - **Performance Metrics**: Monitor error rates across different parameter settings
 - **Long-term Stability**: Use extended runs to verify system reliability
 
+## Recent Code Improvements (software_v2/)
+
+### Code Quality and Maintainability
+- **Eliminated Magic Numbers**: Replaced hardcoded values with meaningful constants (NUM_CHANNELS, MAX_CHANNEL_ID, CHANNEL_STATS_SIZE)
+- **Unified String Formatting**: Converted all % formatting to f-strings for consistency and modern Python practices
+- **Reduced Code Duplication**: Created helper function `write_error_data()` to eliminate repetitive file writing operations
+- **Optimized Data Structures**: Streamlined channel statistics collection with list comprehensions instead of nested loops
+
+### Enhanced Reliability and Bug Fixes  
+- **Improved Time Processing**: Fixed cross-month/year time calculations using proper datetime arithmetic
+- **Better Boundary Checks**: Enhanced channel ID validation to prevent array index errors
+- **Consistent File Operations**: Unified file path formatting across all I/O operations
+- **Cleaner Error Handling**: Improved debug output formatting and error message consistency
+
+### Performance Optimizations
+- **Reduced Function Calls**: Combined duplicate loops for better execution efficiency  
+- **Streamlined File I/O**: Consolidated error data writing to minimize file operations
+- **Optimized String Operations**: Eliminated redundant string formatting and concatenations
+
+These improvements maintain full functional compatibility while significantly enhancing code maintainability, readability, and reliability. All statistical calculations and output formats remain identical to preserve data consistency.
+
 This architecture enables comprehensive SEU testing with flexible parameter control and detailed data analysis capabilities.

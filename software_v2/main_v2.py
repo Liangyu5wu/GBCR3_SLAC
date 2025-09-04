@@ -16,11 +16,31 @@ from GBCR3_Config import GBCR3_Config, parse_channel_config
 from command_interpret import *
 from crc32_8 import crc32_8
 
+# Constants
+NUM_CHANNELS = 9
+CHANNEL_STATS_SIZE = NUM_CHANNELS * 2  # Aligned OK + Aligned Error
+MAX_CHANNEL_ID = 10
 hostname = '192.168.2.6'  # Fixed FPGA IP address at SLAC
 port = 1024  # port number
 
 # ---------------------------
-# 
+# Helper functions
+# ------------------------------------------------------------------#
+def write_error_data(store_dict, channel_id, time_obj, channel_id_val, inject_error, error_counter, 
+                     crc_diff, time_stamp, expected_code, received_code, error_position, crc32):
+    """Write error data to both ChAll.TXT and individual channel files."""
+    error_line = f'{time_obj} {channel_id_val} {inject_error} {error_counter} {crc_diff} {time_stamp} {expected_code:08x} {received_code:08x} {error_position:08x} {crc32}\n'
+    
+    # Write to main error file
+    with open(f"./{store_dict}/ChAll.TXT", 'a') as infile:
+        infile.write(error_line)
+        infile.flush()
+    
+    # Write to individual channel file
+    with open(f"./{store_dict}/Ch{channel_id}.TXT", 'a') as infile:
+        infile.write(error_line)
+        infile.flush()
+
 # ------------------------------------------------------------------#
 def main():
     parser = argparse.ArgumentParser(description='GBCR3 Data Acquisition with configurable parameters')
@@ -285,7 +305,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0, rx_configs=None, tx_configs=N
     total_stats = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     current_file_number = 0
 
-    single_ch_stats = [0] * 18
+    single_ch_stats = [0] * CHANNEL_STATS_SIZE
 
 
     for files in range(num_file):
@@ -294,27 +314,27 @@ def Receive_data(store_dict, num_file, dbg_mode=0, rx_configs=None, tx_configs=N
 
         if files % 10 == 0:
             # # read back data from I2C register one by one
-            with open("./%s/I2C.TXT" % store_dict, 'a') as infile_iic:
+            with open(f"./{store_dict}/I2C.TXT", 'a') as infile_iic:
                 lasttime = datetime.datetime.now()
                 iic_read_val = []
                 for iic_read_index in range(len(iic_write_val)):
                     iic_read_val += [iic_read(0, Slave_Addr, 1, iic_read_index)]
                 if iic_read_val == iic_write_val:
-                    if dbg_mode == 1: print("%s W == R: %s" % (lasttime, iic_read_val))
-                    infile_iic.write("%s Written ==  Read: %s\n" % (lasttime, iic_read_val))
+                    if dbg_mode == 1: print(f"{lasttime} W == R: {iic_read_val}")
+                    infile_iic.write(f"{lasttime} Written ==  Read: {iic_read_val}\n")
                 else:
-                    if dbg_mode == 1: print("%s W!= R: %s" % (lasttime, iic_read_val))
-                    infile_iic.write("%s Written !=  Read: %s\n" % (lasttime, iic_read_val))
+                    if dbg_mode == 1: print(f"{lasttime} W!= R: {iic_read_val}")
+                    infile_iic.write(f"{lasttime} Written !=  Read: {iic_read_val}\n")
                 # end if
                 infile_iic.flush()
             # end with
 
             # # read supply current IDD
-            with open("./%s/IDD.TXT" % store_dict, 'a') as infile_Idd:
+            with open(f"./{store_dict}/IDD.TXT", 'a') as infile_Idd:
                 lasttime = datetime.datetime.now()
                 current = Current_monitor()
-                if dbg_mode == 1: print("IDD: %s %.3f mA" % (lasttime, current[1]))
-                infile_Idd.write("%s %.3f mA\n" % (lasttime, current[1]))
+                if dbg_mode == 1: print(f"IDD: {lasttime} {current[1]:.3f} mA")
+                infile_Idd.write(f"{lasttime} {current[1]:.3f} mA\n")
                 infile_Idd.flush()
             # end with
         # end if files % 10 == 0
@@ -325,7 +345,7 @@ def Receive_data(store_dict, num_file, dbg_mode=0, rx_configs=None, tx_configs=N
             mem_data.append(0)
         mem_data.append(-1)
         if files % 10 == 0:
-            if dbg_mode == 1: print("{} is producing {} to the queue!".format('Receive_data', files))
+            if dbg_mode == 1: print(f"Receive_data is producing {files} to the queue!")
         # end if files % 10 == 0 
         # exec_data(mem_data, store_dict, dbg_mode)
         file_stats, current_channel_stats = exec_data(mem_data, store_dict, dbg_mode, current_file_number)
@@ -336,38 +356,47 @@ def Receive_data(store_dict, num_file, dbg_mode=0, rx_configs=None, tx_configs=N
         for i in range(len(current_channel_stats)):
             single_ch_stats[i] += current_channel_stats[i]
             
-        if files % 20 == 0: print("{} files have been processed!".format(files))
-        # 20220428 #for i in range(50000):
-        # 20220428 #    self.queue.put(mem_data[i])
-    # end for files in range(self.num_file)
-    print("line 266, 'Receive_data' finished!")
+        if files % 20 == 0: print(f"{files} files have been processed!")
+        # End of file processing loop
+    # end for files in range(num_file)
+    print("'Receive_data' finished!")
 
-    print("\nFiles Summary:")
-    print('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
-    print("{:<10} {:<14} {:<11} {:<12} {:<15} {:<14} {:<15} {:<14} {:<13}".format(
-        total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
-        total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
+    # Use global constants for readability
+    STATS_LABELS = [
+        'File_num', 'Filler_Frames', 'Aligned_OK', 'Aligned_Err', 
+        'NotAligned_Err', 'NotAligned_OK', 'Alignment_Loss', 'Bad_ChannelID', 'All_filler_files'
+    ]
 
-    print("\nChannel Statistics Summary:")
-    print("Channel | Aligned OK | Aligned Error")
-    print("--------|------------|-------------")
-    for i in range(9):
-        print(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+9]:6d}")
+    # Prepare output data
+    files_summary_header = f"{STATS_LABELS[0]:<10} {STATS_LABELS[1]:<14} {STATS_LABELS[2]:<11} {STATS_LABELS[3]:<12} {STATS_LABELS[4]:<15} {STATS_LABELS[5]:<14} {STATS_LABELS[6]:<15} {STATS_LABELS[7]:<14} {STATS_LABELS[8]:<13}"
+    files_summary_data = f"{total_stats[0]:<10} {total_stats[1]:<14} {total_stats[2]:<11} {total_stats[3]:<12} {total_stats[4]:<15} {total_stats[5]:<14} {total_stats[6]:<15} {total_stats[7]:<14} {total_stats[8]:<13}"
+    
+    channel_header = "Channel | Aligned OK | Aligned Error"
+    channel_separator = "--------|------------|-------------"
+    
+    # Display to console
+    print(f"\nFiles Summary:")
+    print(files_summary_header)
+    print(files_summary_data)
+    
+    print(f"\nChannel Statistics Summary:")
+    print(channel_header)
+    print(channel_separator)
+    for i in range(NUM_CHANNELS):
+        print(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+NUM_CHANNELS]:6d}")
 
-    with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
-        infile.write('File_num  Filler_Frames  Aligned_OK  Aligned_Err  NotAligned_Err  NotAligned_OK  Alignment_Loss  Bad_ChannelID  All_filler_files\n')
-        infile.write('%d %d %d %d %d %d %d %d %d\n' % (total_stats[0], total_stats[1], total_stats[2], total_stats[3], 
-                                                       total_stats[4], total_stats[5], total_stats[6], total_stats[7], total_stats[8]))
-        infile.write("Channel Statistics Summary:\n")
-        infile.write("Channel | Aligned OK | Aligned Error\n")
-        infile.write("--------|------------|-------------\n")
-        for i in range(9):
-            infile.write(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+9]:6d}\n")
-        infile.flush()
+    # Write to file (append final summary, header already written during file creation)
+    with open(f"./{store_dict}/Filesummary.TXT", 'a') as infile:
+        infile.write(f"{' '.join(STATS_LABELS)}\n")
+        infile.write(f"{' '.join(map(str, total_stats))}\n")
+        infile.write(f"Channel Statistics Summary:\n")
+        infile.write(f"{channel_header}\n")
+        infile.write(f"{channel_separator}\n")
+        for i in range(NUM_CHANNELS):
+            infile.write(f"   {i}    |    {single_ch_stats[i]:6d}   |    {single_ch_stats[i+NUM_CHANNELS]:6d}\n")
     
     generate_summary(store_dict, dbg_mode)
-    # 20220428 #self.queue.put(-1)
-# end def run
+# end def Receive_data
 # ---------------------------------------------------------------------------------------------#
 
 # ---------------------------------------------------------------------
@@ -454,23 +483,16 @@ def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
 
                 Time = datetime.datetime.now()
                 if dbg == 1 and aligned_error_counter < 20: 
-                    print('%s %d %d %d %d %d %08x %08x %08x %d' % (Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
-                    expected_code, received_code, error_position, crc32))
-                with open("./%s/ChAll.TXT" % store_dict, 'a') as infile:  # # 'a': add, will not cover previous infor
-                    infile.write('%s %d %d %d %d %d %08x %08x %08x %d\n' % (
-                        Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
-                        expected_code, received_code, error_position, crc32))
-                    infile.flush()
-                with open("./%s/Ch%d.TXT" % (store_dict, channel_id), 'a') as infile:  # # 'a': add, will not cover previous infor
-                    infile.write('%s %d %d %d %d %d %08x %08x %08x %d\n' % (
-                        Time, channel_id, inject_error, error_counter, cal_crc32 - crc32, time_stamp,
-                        expected_code, received_code, error_position, crc32))
-                    infile.flush()
+                    print(f'{Time} {channel_id} {inject_error} {error_counter} {cal_crc32 - crc32} {time_stamp} {expected_code:08x} {received_code:08x} {error_position:08x} {crc32}')
+                
+                # Write error data to both files using helper function
+                write_error_data(store_dict, channel_id, Time, channel_id, inject_error, error_counter, 
+                               cal_crc32 - crc32, time_stamp, expected_code, received_code, error_position, crc32)
                 # Frame stat Aligned with Error
-                if channel_id < 10:
+                if channel_id < MAX_CHANNEL_ID:
                     ChStat[3][channel_id] = ChStat[3][channel_id] + 1
                 else:
-                    if dbg == 1: print("Bad channel_id %i" % channel_id)
+                    if dbg == 1: print(f"Bad channel_id {channel_id}")
                     ChStat[3][10] = ChStat[3][10] + 1
                 #end if
             else:  # error_flag != 1
@@ -491,16 +513,16 @@ def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
                         cal_crc32_t = crc32_8(cal_crc_data[k + 1], cal_crc32)
                         cal_crc32 = cal_crc32_t
                         
-                    if cal_crc32 - crc32 == 0 and channel_id < 10:
+                    if cal_crc32 - crc32 == 0 and channel_id < MAX_CHANNEL_ID:
                         ChStat[2][channel_id] = ChStat[2][channel_id] + 1
                     else:
                         aligned = 0
-                        if dbg == 1: print("Line 407, ALignment loss Rawdata is %x" % Rawdata)
+                        if dbg == 1: print(f"Line 407, ALignment loss Rawdata is {Rawdata:x}")
                         ChStat[2][10] = ChStat[2][10] + 1
             # end if error_flag
         else:  # aligned != 1
             if i<200 and dbg == 1:
-                print("Not aligned chan=%i  Rawdata=%x" % (StatChan,Rawdata))
+                print(f"Not aligned chan={StatChan}  Rawdata={Rawdata:x}")
             while aligned == 0:
                 if i > 50000:
                     isEnd = True
@@ -528,11 +550,11 @@ def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
                         if isEnd==0 and remainder==1:  
                             ErrNA  = val[0]>>31&1 
                             ChanNA = val[0]>>27&0xF
-                            if ChanNA>9:
-                                if dbg == 1: print("Not aligned i=%i bad chan=%i  Rawdata=%x" % (i,ChanNA,Rawdata))
-                                ChanNA = 9
+                            if ChanNA > (NUM_CHANNELS - 1):
+                                if dbg == 1: print(f"Not aligned i={i} bad chan={ChanNA}  Rawdata={Rawdata:x}")
+                                ChanNA = NUM_CHANNELS - 1
                             else:
-                                if dbg == 1: print("Not aligned i=%i chan=%i  Rawdata=%x" % (i,ChanNA,Rawdata))
+                                if dbg == 1: print(f"Not aligned i={i} chan={ChanNA}  Rawdata={Rawdata:x}")
                             #end if
                             ChStat[ErrNA][ChanNA] = ChStat[ErrNA][ChanNA] + 1 
                         #end if remainer = 1 
@@ -558,19 +580,19 @@ def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
             for m in range(11):
                 ChanCnt_NA_Err = ChanCnt_NA_Err + ChStat[n][m]
         if n > 1:
-            for m in range(9):
+            for m in range(NUM_CHANNELS):
                 if dbg == 1:
-                    print(" file summary Chan %i: Data frame Aligned Err/OK=%i/%i" % (m,ChStat[3][m],ChStat[2][m]))
+                    print(f" file summary Chan {m}: Data frame Aligned Err/OK={ChStat[3][m]}/{ChStat[2][m]}")
                 ChanCnt_AL_Err += ChStat[3][m]
                 ChanCnt_AL_OK  += ChStat[2][m]
 
     if dbg == 1:
-        print(" file summary filler frames= %i" % (ChStat[2][9]))
-        print(" file summary aligned data OK= %i" % (ChanCnt_AL_OK))
-        print(" file summary aligned data Err= %i" % (ChanCnt_AL_Err))
-        print(" file summary: Not aligned Err/OK=%i/%i" % (ChanCnt_NA_Err,ChanCnt_NA_OK))
-        print(" file summary ALignment loss: %i" % (ChStat[2][10]))
-        print(" file summary Aligned with Error, bad channel id: %i" % (ChStat[3][10]))
+        print(f" file summary filler frames= {ChStat[2][9]}")
+        print(f" file summary aligned data OK= {ChanCnt_AL_OK}")
+        print(f" file summary aligned data Err= {ChanCnt_AL_Err}")
+        print(f" file summary: Not aligned Err/OK={ChanCnt_NA_Err}/{ChanCnt_NA_OK}")
+        print(f" file summary ALignment loss: {ChStat[2][10]}")
+        print(f" file summary Aligned with Error, bad channel id: {ChStat[3][10]}")
         print(" Next File...")
         
     Total_frames = ChStat[2][9] + ChanCnt_AL_OK + ChanCnt_AL_Err + ChanCnt_NA_Err + ChanCnt_NA_OK + ChStat[2][10] + ChStat[3][10]
@@ -580,25 +602,20 @@ def exec_data(mem_data, store_dict, dbg_mode=0, current_file_number=0):
     file_stats = [1,ChStat[2][9], ChanCnt_AL_OK, ChanCnt_AL_Err, ChanCnt_NA_Err, ChanCnt_NA_OK, ChStat[2][10], 
                  ChStat[3][10], 1 if data_exist_counter == 0 else 0]
 
-    current_channel_stats = []
-    for i in range(9):
-        current_channel_stats.append(ChStat[2][i]) 
-    for i in range(9):
-        current_channel_stats.append(ChStat[3][i])
+    # Collect channel statistics: [aligned_OK_ch0..ch8, aligned_Error_ch0..ch8]
+    current_channel_stats = [ChStat[2][i] for i in range(NUM_CHANNELS)]  # Aligned OK
+    current_channel_stats.extend([ChStat[3][i] for i in range(NUM_CHANNELS)])  # Aligned Error
 
 
-    with open("./%s/Filesummary.TXT" % (store_dict), 'a') as infile:
-        infile.write('%d %d %d %d %d %d %d %d %d\n' % (
-                    current_file_number, file_stats[1], file_stats[2], file_stats[3], file_stats[4], file_stats[5], file_stats[6], file_stats[7], Total_frames))
+    with open(f"./{store_dict}/Filesummary.TXT", 'a') as infile:
+        infile.write(f'{current_file_number} {file_stats[1]} {file_stats[2]} {file_stats[3]} {file_stats[4]} {file_stats[5]} {file_stats[6]} {file_stats[7]} {Total_frames}\n')
         infile.flush()
 
         infile.write('Channel Aligned_OK Aligned_Error\n')
-        for i in range(9):
-            infile.write('Channel_%d %d %d\n' % (i, current_channel_stats[i], current_channel_stats[9 + i]))
+        for i in range(NUM_CHANNELS):
+            infile.write(f'Channel_{i} {current_channel_stats[i]} {current_channel_stats[NUM_CHANNELS + i]}\n')
     return file_stats, current_channel_stats
-        #end if
-    #end for
-    #print(" line 306 %s finished!" % self.name)
+# end def exec_data
 
 
 # ---------------------------------------------------------------------------------------------#
