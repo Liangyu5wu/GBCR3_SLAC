@@ -58,22 +58,27 @@ def main():
                        help='Clock config: rx_en=1,tx_delay=0xc')
     
     # Quick presets
-    parser.add_argument('--retimed-ch4', action='store_true',
-                       help='Quick preset: Configure CH4 for retimed mode (mux_bias=0xf)')
-    parser.add_argument('--voted-ch4', action='store_true', 
-                       help='Quick preset: Configure CH4 for voted mode (mux_bias=0x17)')
+    parser.add_argument('--retimed', type=str,
+                       help='Quick preset: Configure channel for retimed mode (format: ch4 or ch4:0x8 for custom delay)')
+    parser.add_argument('--disable', type=str,
+                       help='Quick preset: Disable specific channel (format: ch4)')
     parser.add_argument('--delay', type=str,
-                       help='Clock delay for CH4 (hex format like 0x8, used with presets)')
+                       help='Default clock delay (hex format like 0x8, used with retimed preset)')
     
     args = parser.parse_args()
     
     # Handle quick presets
-    if args.retimed_ch4 or args.voted_ch4:
-        if not args.rx_config:
-            args.rx_config = []
-        
-        mux_bias = 0xf if args.retimed_ch4 else 0x17
-        delay = args.delay if args.delay else '0x5'
+    if not args.rx_config:
+        args.rx_config = []
+    
+    # Handle retimed preset
+    if args.retimed:
+        channel_spec = args.retimed
+        if ':' in channel_spec:
+            channel, delay = channel_spec.split(':', 1)
+        else:
+            channel = channel_spec
+            delay = args.delay if args.delay else '0x5'
         
         # Parse delay
         if delay.startswith('0x'):
@@ -81,11 +86,16 @@ def main():
         else:
             delay_val = int(delay)
         
-        preset_config = f'ch4:mux_bias=0x{mux_bias:x},clk_delay=0x{delay_val:x}'
+        preset_config = f'{channel}:mux_bias=0xf,clk_delay=0x{delay_val:x}'
         args.rx_config.append(preset_config)
-        
-        mode_name = "retimed" if args.retimed_ch4 else "voted"
-        print(f"Using preset: CH4 {mode_name} mode with delay 0x{delay_val:x}")
+        print(f"Using preset: {channel.upper()} retimed mode with delay 0x{delay_val:x}")
+    
+    # Handle disable preset
+    if args.disable:
+        channel = args.disable
+        disable_config = f'{channel}:dis_chan=1'
+        args.rx_config.append(disable_config)
+        print(f"Using preset: {channel.upper()} disabled")
 
     today = datetime.date.today()
     todaystr = "QAResults_v2"

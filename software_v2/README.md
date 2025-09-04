@@ -26,14 +26,16 @@ python main_v2.py 100 1   # Debug mode
 ### New Command-line Configuration Features
 
 ```bash
-# Configure CH4 for retimed mode (mux_bias=0xf)
-python main_v2.py 100 1 --retimed-ch4
+# Configure any channel for retimed mode (mux_bias=0xf)
+python main_v2.py 100 1 --retimed ch4
+python main_v2.py 100 1 --retimed ch6
 
-# Configure CH4 for voted mode (mux_bias=0x17) 
-python main_v2.py 100 1 --voted-ch4
+# Configure channel for retimed mode with specific delay
+python main_v2.py 100 1 --retimed ch4:0x8
+python main_v2.py 100 1 --retimed ch4 --delay 0x8
 
-# Configure CH4 for retimed mode with specific delay
-python main_v2.py 100 1 --retimed-ch4 --delay 0x8
+# Disable specific channel
+python main_v2.py 100 1 --disable ch4
 
 # Manual RX channel parameter configuration
 python main_v2.py 100 1 --rx-config "ch4:mux_bias=0xf,clk_delay=0x8"
@@ -48,9 +50,6 @@ python main_v2.py 100 1 --tx-config "ch1:ampl=0x7,sr1=0x4"
 
 # Configure clock parameters
 python main_v2.py 100 1 --clock-config "rx_en=1,tx_delay=0xc"
-
-# Disable a specific channel (CH4)
-python main_v2.py 100 1 --rx-config "ch4:dis_chan=1"
 ```
 
 ## Parameter Reference
@@ -122,15 +121,17 @@ New version greatly simplifies parameter scanning script development:
 
 ```bash
 #!/bin/bash
-# Scan retimed mode performance across different delay settings
+# Scan retimed mode performance across different channels and delay settings
 
-for delay in {0..15}; do
-    hex_delay=$(printf "0x%x" $delay)
-    echo "Testing retimed mode with delay $hex_delay"
-    
-    python main_v2.py 50 0 --retimed-ch4 --delay $hex_delay
-    
-    # Add result analysis code here
+for channel in ch4 ch5 ch6; do
+    for delay in {0..15}; do
+        hex_delay=$(printf "0x%x" $delay)
+        echo "Testing retimed mode on $channel with delay $hex_delay"
+        
+        python main_v2.py 50 0 --retimed $channel:$hex_delay
+        
+        # Add result analysis code here
+    done
 done
 ```
 

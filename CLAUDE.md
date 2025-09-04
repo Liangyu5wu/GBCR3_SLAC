@@ -37,12 +37,13 @@ python main_v2.py 100          # 100 files, normal mode
 python main_v2.py 100 1        # 100 files, debug mode
 
 # Configure specific channels without code modification
-python main_v2.py 100 1 --retimed-ch4 --delay 0x8
+python main_v2.py 100 1 --retimed ch4:0x8
+python main_v2.py 100 1 --disable ch6
 python main_v2.py 100 1 --rx-config "ch4:mux_bias=0xf,clk_delay=0x8"
 
 # Multiple channel configuration
 python main_v2.py 100 1 \
-    --rx-config "ch4:mux_bias=0xf,clk_delay=0x8" \
+    --retimed ch4:0x8 \
     --rx-config "ch6:mux_bias=0x17,clk_delay=0x5"
 
 # Get help on all parameters
@@ -74,11 +75,11 @@ Enhanced version greatly simplifies automation:
 
 ```bash
 #!/bin/bash
-# Example: Test retimed vs voted modes across delay range
-for mode in retimed voted; do
+# Example: Test retimed mode across different channels and delay range
+for channel in ch4 ch5 ch6; do
     for delay in {0..15}; do
         hex_delay=$(printf "0x%x" $delay)
-        python main_v2.py 50 0 --${mode}-ch4 --delay $hex_delay
+        python main_v2.py 50 0 --retimed $channel:$hex_delay
     done
 done
 ```
