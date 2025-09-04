@@ -51,7 +51,7 @@ def main():
     
     # Configuration parameters
     parser.add_argument('--rx-config', action='append', 
-                       help='RX channel config: ch4:mux_bias=0xf,clk_delay=0x8 (can use multiple times)')
+                       help='RX channel config: rx4:mux_bias=0xf,clk_delay=0x8 (can use multiple times)')
     parser.add_argument('--tx-config', action='append',
                        help='TX channel config: ch1:ampl=0x7,sr1=0x4')
     parser.add_argument('--clock-config',
@@ -59,9 +59,9 @@ def main():
     
     # Quick presets
     parser.add_argument('--retimed', type=str,
-                       help='Quick preset: Configure channel for retimed mode (format: ch4 or ch4:0x8 for custom delay)')
+                       help='Quick preset: Configure RX channel for retimed mode (format: rx4 or rx4:0x8 for custom delay)')
     parser.add_argument('--disable', type=str,
-                       help='Quick preset: Disable specific channel (format: ch4)')
+                       help='Quick preset: Disable specific RX channel (format: rx4)')
     parser.add_argument('--delay', type=str,
                        help='Default clock delay (hex format like 0x8, used with retimed preset)')
     

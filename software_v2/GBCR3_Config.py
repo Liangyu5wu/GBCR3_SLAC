@@ -210,17 +210,20 @@ class GBCR3_Config(object):
 
 def parse_channel_config(config_str):
     """Parse channel configuration from string format
-    Format: 'ch4:mux_bias=0xf,clk_delay=0x8' or 'ch4:mux_bias=0xf'
+    Format: 'rx4:mux_bias=0xf,clk_delay=0x8' or 'ch1:ampl=0x7' (tx channels still use ch)
     """
     if ':' not in config_str:
-        raise ValueError("Invalid format. Use 'ch4:param=value,param2=value2'")
+        raise ValueError("Invalid format. Use 'rx4:param=value,param2=value2' or 'ch1:param=value'")
     
     ch_part, params_part = config_str.split(':', 1)
     
-    # Parse channel
-    if not ch_part.startswith('ch'):
-        raise ValueError("Channel must start with 'ch' (e.g., 'ch4')")
-    channel = int(ch_part[2:])
+    # Parse channel - support both rx (RX channels) and ch (TX channels or legacy)
+    if ch_part.startswith('rx'):
+        channel = int(ch_part[2:])
+    elif ch_part.startswith('ch'):
+        channel = int(ch_part[2:])
+    else:
+        raise ValueError("Channel must start with 'rx' (e.g., 'rx4') or 'ch' (e.g., 'ch1')")
     
     # Parse parameters
     params = {}
