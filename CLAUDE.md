@@ -185,13 +185,15 @@ Both versions generate timestamped directories:
 
 ### Automated QC Testing
 
-The `GBCR3_QC_Test.sh` script provides comprehensive quality control testing:
+The `GBCR3_QC_Test.sh` script provides simplified automated quality control testing:
 
 1. **Environment Setup**: Loads FPGA bitstream and configures software environment
-2. **Basic Functionality**: Tests default register configuration with 10 files
-3. **Channel Disabling Test**: Randomly disables 2 RX channels to verify disable functionality
-4. **Retiming Mode Test**: Tests random RX channel in retiming mode with random delay
-5. **MF/HF Amplification Scan**: 2D parameter scan (step size 4) for equalizer optimization
+2. **Basic Functionality**: Tests default register configuration (10 files)
+3. **Channel Disabling Test**: Randomly disables 2 RX channels to verify disable functionality (10 files)
+4. **Retiming Mode Test**: Tests random RX channel in retiming mode with random delay (10 files)
+5. **MF/HF Amplification Scan**: 2D parameter scan with step size 4 for equalizer optimization (5 files per point, 16 points total)
+
+The script provides clear progress indicators and comprehensive logging without complex formatting.
 
 ### Manual Testing Guidelines
 
