@@ -50,6 +50,11 @@ python main_v2.py 100 1 --tx-config "ch1:ampl=0x7,sr1=0x4"
 
 # Configure clock parameters
 python main_v2.py 100 1 --clock-config "rx_en=1,tx_delay=0xc"
+
+# Configure MF & HF equalizer amplification parameters
+# Set all HF equalizers (HF1, HF2, HF3) to same value, MF to different value
+python main_v2.py 100 1 --rx-config "rx4:eq_hf1=0x8,eq_hf2=0x8,eq_hf3=0x8,eq_mf=0x4"
+python main_v2.py 100 1 --rx-config "rx6:eq_hf1=0xc,eq_hf2=0xc,eq_hf3=0xc,eq_mf=0x2"
 ```
 
 ## Parameter Reference
@@ -108,29 +113,38 @@ Program creates timestamped folders in `QAResults_v2/` directory containing:
 - `I2C.TXT`: I2C register verification records
 - `IDD.TXT`: Current monitoring records
 
-## Compatibility with Original
+## MF & HF Amplification Parameter Adjustment
 
-- **Full Compatibility**: Default configuration identical to original version
-- **Same Calculations**: All statistical calculations and data processing logic preserved
-- **Same Output**: Output file format and content identical
-- **Same Interface**: Supports original calling convention (num_files, debug_mode)
+The system supports fine-tuning of equalizer amplification parameters for optimal signal conditioning:
 
-## Scan Script Example
+### High Frequency (HF) and Mid Frequency (MF) Equalizers
 
-New version greatly simplifies parameter scanning script development:
+- **eq_hf1, eq_hf2, eq_hf3**: High frequency equalizer settings (0x0-0xf)
+- **eq_mf**: Mid frequency equalizer setting (0x0-0xf)
+
+### Usage Examples
+
+```bash
+# Example 1: Configure RX4 with HF equalizers at 0x8, MF equalizer at 0x4
+python main_v2.py 100 1 --rx-config "rx4:eq_hf1=0x8,eq_hf2=0x8,eq_hf3=0x8,eq_mf=0x4"
+
+# Example 2: Configure RX6 with HF equalizers at 0xc, MF equalizer at 0x2  
+python main_v2.py 100 1 --rx-config "rx6:eq_hf1=0xc,eq_hf2=0xc,eq_hf3=0xc,eq_mf=0x2"
+
+# Example 3: Configure multiple channels with different equalizer settings
+python main_v2.py 100 1 \
+    --rx-config "rx4:eq_hf1=0x8,eq_hf2=0x8,eq_hf3=0x8,eq_mf=0x4" \
+    --rx-config "rx5:eq_hf1=0xa,eq_hf2=0xa,eq_hf3=0xa,eq_mf=0x6"
+```
+
+### Parameter Scanning for Equalizer Optimization
 
 ```bash
 #!/bin/bash
-# Scan retimed mode performance across different channels and delay settings
-
-for channel in rx4 rx5 rx6; do
-    for delay in {0..15}; do
-        hex_delay=$(printf "0x%x" $delay)
-        echo "Testing retimed mode on $channel with delay $hex_delay"
-        
-        python main_v2.py 50 0 --retimed $channel:$hex_delay
-        
-        # Add result analysis code here
+# Scan HF/MF equalizer settings for optimal performance
+for hf_val in 0x4 0x8 0xc; do
+    for mf_val in 0x2 0x4 0x6 0x8; do
+        python main_v2.py 50 0 --rx-config "rx4:eq_hf1=$hf_val,eq_hf2=$hf_val,eq_hf3=$hf_val,eq_mf=$mf_val"
     done
 done
 ```
@@ -161,6 +175,25 @@ done
 - **Better error handling**: Improved boundary checks for channel IDs to prevent array index errors
 - **Consistent file operations**: Unified file path formatting across all operations
 - **Cleaner code structure**: Removed outdated comments and improved function documentation
+
+## Quality Control (QC) Testing
+
+The `GBCR3_QC_Test.sh` script provides a comprehensive automated testing suite for validating system functionality:
+
+```bash
+# Run complete QC test suite
+./GBCR3_QC_Test.sh
+```
+
+### QC Test Components
+
+1. **Environment Setup**: Loads FPGA bitstream and configures software environment
+2. **Basic Functionality**: Tests default register configuration 
+3. **Channel Disabling Test**: Randomly disables 2 RX channels to verify disable functionality
+4. **Retiming Mode Test**: Tests random RX channel in retiming mode with random delay
+5. **MF/HF Amplification Scan**: 2D parameter scan (step size 4) for equalizer optimization
+
+All test output is saved to timestamped log files for analysis and debugging.
 
 ## Command Line Help
 

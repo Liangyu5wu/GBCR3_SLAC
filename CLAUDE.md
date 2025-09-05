@@ -20,6 +20,7 @@ The repository contains two main versions:
 #### Enhanced Version (`software_v2/`) - RECOMMENDED
 - **main_v2.py**: Enhanced main script with command-line parameter support
 - **GBCR3_Config.py**: Streamlined register configuration class following original logic
+- **GBCR3_QC_Test.sh**: Comprehensive automated QC testing suite
 - **README.md**: Comprehensive documentation for the enhanced version
 - Same utility modules copied from original version
 
@@ -40,6 +41,10 @@ python main_v2.py 100 1        # 100 files, debug mode
 python main_v2.py 100 1 --retimed rx4:0x8
 python main_v2.py 100 1 --disable rx6
 python main_v2.py 100 1 --rx-config "rx4:mux_bias=0xf,clk_delay=0x8"
+
+# MF & HF equalizer amplification parameter adjustment
+python main_v2.py 100 1 --rx-config "rx4:eq_hf1=0x8,eq_hf2=0x8,eq_hf3=0x8,eq_mf=0x4"
+python main_v2.py 100 1 --rx-config "rx6:eq_hf1=0xc,eq_hf2=0xc,eq_hf3=0xc,eq_mf=0x2"
 
 # Multiple channel configuration
 python main_v2.py 100 1 \
@@ -69,6 +74,16 @@ bash load_bitstream.sh
 # firmware/GBCR2_SEU_Test_newreset.bit
 ```
 
+### Quality Control (QC) Testing
+
+Comprehensive automated testing suite:
+
+```bash
+# Run complete QC test suite
+cd software_v2
+./GBCR3_QC_Test.sh
+```
+
 ### Parameter Scanning Scripts
 
 Enhanced version greatly simplifies automation:
@@ -80,6 +95,13 @@ for channel in rx4 rx5 rx6; do
     for delay in {0..15}; do
         hex_delay=$(printf "0x%x" $delay)
         python main_v2.py 50 0 --retimed $channel:$hex_delay
+    done
+done
+
+# Example: MF/HF equalizer parameter scanning
+for hf_val in 0x4 0x8 0xc; do
+    for mf_val in 0x2 0x4 0x6 0x8; do
+        python main_v2.py 50 0 --rx-config "rx4:eq_hf1=$hf_val,eq_hf2=$hf_val,eq_hf3=$hf_val,eq_mf=$mf_val"
     done
 done
 ```
@@ -160,6 +182,18 @@ Both versions generate timestamped directories:
 - **FPGA Communication**: Socket connection failures indicate hardware issues
 
 ## Testing and Validation
+
+### Automated QC Testing
+
+The `GBCR3_QC_Test.sh` script provides comprehensive quality control testing:
+
+1. **Environment Setup**: Loads FPGA bitstream and configures software environment
+2. **Basic Functionality**: Tests default register configuration with 10 files
+3. **Channel Disabling Test**: Randomly disables 2 RX channels to verify disable functionality
+4. **Retiming Mode Test**: Tests random RX channel in retiming mode with random delay
+5. **MF/HF Amplification Scan**: 2D parameter scan (step size 4) for equalizer optimization
+
+### Manual Testing Guidelines
 
 - **Register Verification**: I2C read-back comparison ensures configuration integrity  
 - **Statistical Validation**: Compare channel statistics between runs for consistency
